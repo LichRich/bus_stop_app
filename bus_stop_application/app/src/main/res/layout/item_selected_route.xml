@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="#000000">
+
+<!--    API를 통해 버스 위치를 확인 후, 해당 정류장에 버스가 있으면 image view의 src를 지정. 아니면 src="".-->
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"
+        android:orientation="horizontal"
+        android:layout_margin="5px">
+
+        <ImageView
+            android:id="@+id/iv_busIcon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@color/white"
+            android:layout_marginRight="3px"
+            android:layout_weight="2"
+            android:src=""/>
+
+        <TextView
+            android:id="@+id/tv_busStop"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@color/white"
+            android:layout_weight="8"
+            android:gravity="center"
+            android:textSize="30sp"
+            android:text="정류장 이름"/>
+
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

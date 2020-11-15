@@ -1,0 +1,79 @@
+변수 이름
+
+------------------------------------------------------------------
+(재훈) <<버스 전체 노선 관련>>
+------------------------------------------------------------------
+
+1. activity_main.xml
+ -> 노선번호 목록이 나열 될 메인 activity
+검색창: et_search
+검색버튼: btn_search
+노선번호 목록이 뜰 recyclerView: recycler_routesAll
+------------------------------------------------------------------
+2. item_routes_all.xml
+ -> 노선번호 목록에 나열 될 아이템들에 대한 layout
+노선번호가 출력될 textView: tv_routeNum
+------------------------------------------------------------------
+3. BusRouteItem.java
+ -> 노선번호 목록에 나열 될 아이템 객체 java class
+버스 노선번호: int num;
+getter/setter 있음. 생성자 있음.
+------------------------------------------------------------------
+4. MainActivity.java
+ -> 노선번호 목록이 나열 될 메인 activity java class
+
+------------------------------------------------------------------
+(찬호) <<선택된 버스 노선 관련>>
+------------------------------------------------------------------
+
+1. activity_selected.xml
+건드릴 사항 없음 자바 페이지에서 조정.
+------------------------------------------------------------------
+2. fragment_down_line.xml
+정류장 목록이 나열될 recyclerView: recycler_downLine
+------------------------------------------------------------------
+3. fragment_up_line.xml
+정류장 목록이 나열될 recyclerView: recycler_upLine
+------------------------------------------------------------------
+4. item_selected_route.xml
+버스 아이콘: iv_busIcon
+정류장 이름: tv_busStop
+------------------------------------------------------------------
+5. SelectedRouteItem.java
+-> 정류장 나열에 사용될 리스트 아이템 객체 java class
+버스가 현 위치에 있는지 여부: boolean busIsHere;
+정류장 이름: String busStopName;
+getter/setter 있음. 생성자 있음.
+------------------------------------------------------------------
+6. SelectedRouteInfo.java
+-> 선택된 노선의 정류장 목록 나열
+버스아이콘 선택 여부: checked_bus;
+목적지 선택 여부: checked_dest;
+Layout Components:
+ Context mContext;
+ TabLayout mTabLayout;
+ ViewPager mViewPager;
+ RouteInfoPagerAdapter mAdapter;
+------------------------------------------------------------------
+7. DownLineFragment, UpLineFragment.java
+-> 상,하행에 대한 fragment. ViewPager에 해당 내용 출력
+
+
+------------------------------------------------------------------
+(수빈) <<알림 관련>>
+------------------------------------------------------------------
+
+1. activity_getoff_notification.xml
+ -> 하차해야한다는 알림을 알려주는 activity
+확인 버튼: btn_notificationOk
+------------------------------------------------------------------
+2. activity_check_notification.xml
+ -> 하차 여부를 묻는 activity
+예 버튼: btn_yes
+아니오 버튼: btn_no
+------------------------------------------------------------------
+3. GetOffNotificationActivity.java
+ -> 하차해야한다는 알림을 알려주는 activity java class
+------------------------------------------------------------------
+4. CheckNotificationActivity.java
+ -> 하차 여부를 묻는 activity java class

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="#000000">
+
+<!--    여기에 노선 번호가 출력되게끔 하면 됩니다. 예시로 102 적어둠-->
+    <TextView
+        android:id="@+id/tv_routeNum"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"
+        android:gravity="center"
+        android:background="@color/white"
+        android:layout_margin="5px"
+        android:text="102"
+        android:textSize="30sp"/>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

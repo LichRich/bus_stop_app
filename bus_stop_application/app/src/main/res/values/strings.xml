@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">BusStopApplication</string>
+    <string name="hint_search">노선 번호를 입력하세요.</string>
+    <string name="btn_search">검색</string>
+    <string name="notification_get_off_1">한 정거장 전이에요!</string>
+    <string name="notification_get_off_2">내릴 준비하세요!</string>
+    <string name="notification_check_question">무사히 내리셨나요?</string>
+    <string name="btn_yes">예</string>
+    <string name="btn_no">아니오</string>
+    <string name="btn_ok">확인</string>
+</resources>
