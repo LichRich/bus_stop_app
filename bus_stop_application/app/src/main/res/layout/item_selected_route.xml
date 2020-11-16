@@ -21,7 +21,7 @@
             android:background="@color/white"
             android:layout_marginRight="3px"
             android:layout_weight="2"
-            android:src=""/>
+            android:src="@color/white"/>
 
         <TextView
             android:id="@+id/tv_busStop"
