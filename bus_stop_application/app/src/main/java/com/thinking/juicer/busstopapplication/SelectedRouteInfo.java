@@ -15,6 +15,12 @@ public class SelectedRouteInfo extends AppCompatActivity {
 
 /*
 *
+* TAG
+*
+* */
+    private final String TAG = "Selected Route Info";
+/*
+*
 * Layout Components
 *
 * */
@@ -22,7 +28,6 @@ public class SelectedRouteInfo extends AppCompatActivity {
     private TabLayout mTabLayout;
     private ViewPager mViewPager;
     private RouteInfoPagerAdapter mAdapter;
-
 /*
 *
 * Check Bus icon, Destination click
