@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity">
+    tools:context=".MainActivity"
+    android:orientation="vertical">
 
     <LinearLayout
         android:id="@+id/layout_search"
@@ -14,11 +15,11 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <EditText
-            android:id="@+id/et_search"
+            android:id="@+id/het_search"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="9"
-            android:hint="@string/hint_search"
+            android:hint="노선을 입력하세요."
             android:inputType="number" />
 
         <Button
@@ -26,16 +27,37 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="@string/btn_search"/>
-
+            android:text="검색"/>
     </LinearLayout>
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recycler_routesAll"
+    <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@+id/layout_search"/>
+        app:cardCornerRadius="8dp"
+        android:layout_margin="4dp"
+        app:cardBackgroundColor="#FFFFFF"
+        app:cardElevation="4dp"
+        app:contentPadding="8dp">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/bs_num"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+
+                android:textSize="24sp"
+                android:textColor="@color/black"
+                android:maxLines="1"
+                android:padding="8dp"
+                android:textStyle="bold"/>
 
 
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+        </LinearLayout>
+
+
+    </androidx.cardview.widget.CardView>
+
+</LinearLayout>
