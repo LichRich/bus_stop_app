@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.AsyncTask;
+import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Toast;
 
@@ -19,16 +20,42 @@ import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
 
 public class MainActivity extends AppCompatActivity {
 
     RecyclerView recyclerView;
 
     ArrayList<BusRouteItem> items= new ArrayList<>();
+    /**
+     *
+     * 임시로 실행하기 위한 코드
+     *
+     * */
+    EditText et_search;
+    Button btn_search;
+    RecyclerView recycler_routeAll;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        /**
+         *
+         * 임시로 실행하기 위한 코드
+         *
+         * */
+        et_search = (EditText) findViewById(R.id.et_search);
+        btn_search = (Button) findViewById(R.id.btn_search);
+        recycler_routeAll = (RecyclerView) findViewById(R.id.recycler);
+
+        btn_search.setOnClickListener(view -> {
+            Intent intent = new Intent(getApplicationContext(), SelectedRouteInfo.class);
+            startActivity(intent);
+        });
 
         recyclerView = findViewById(R.id.recycler);
 
@@ -128,6 +155,7 @@ public class MainActivity extends AppCompatActivity {
             //이 메소드 안에서는 UI변경 작업 가능
             Toast.makeText(MainActivity.this, s+":"+items.size(), Toast.LENGTH_SHORT).show();
         }
+
     }//RssFeedTask class
 
 }//MainActivity class ..

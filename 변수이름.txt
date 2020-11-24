@@ -39,11 +39,12 @@ getter/setter 있음. 생성자 있음.
 버스 아이콘: iv_busIcon
 정류장 이름: tv_busStop
 ------------------------------------------------------------------
+자바 공통 : 태그 = TAG;
 5. SelectedRouteItem.java
 -> 정류장 나열에 사용될 리스트 아이템 객체 java class
 버스가 현 위치에 있는지 여부: boolean busIsHere;
 정류장 이름: String busStopName;
-getter/setter 있음. 생성자 있음.
+getter/setter 있음. 생성자 있음.1
 ------------------------------------------------------------------
 6. SelectedRouteInfo.java
 -> 선택된 노선의 정류장 목록 나열
@@ -55,10 +56,31 @@ Layout Components:
  ViewPager mViewPager;
  RouteInfoPagerAdapter mAdapter;
 ------------------------------------------------------------------
-7. DownLineFragment, UpLineFragment.java
--> 상,하행에 대한 fragment. ViewPager에 해당 내용 출력
-
-
+7. Fragment 공통: API 관련
+url 앞부분: private final String url_main;
+버스 위치 가져오기 위한 int: private final int num_posInfo = 0;
+노선 경유 정류장 목록 가져오기 위한 int: private final int num_routeInfo = 1;
+url Key 값: private final String url_key;
+전체 노선에서 클릭된 값 받아올 때:
+ 노선 번호: route_no;
+ 노선 id: butsRouteId;
+RecyclerView 내 각 View값:
+ ImageView: iv_busIcon;
+ TextView: tv_busStop;
+------------------------------------------------------------------
+7-1. UpLineFragment.java
+-> 상행에 대한 fragment. ViewPager에 해당 내용 출력
+Layout Components:
+ private View upLineLayout;
+ private RecyclerView rv_up;
+RecyclerView에 목록을 출력하기 위한 Adapter: upLineAdapter
+------------------------------------------------------------------
+7-2. DownLineFragment.java
+-> 하행에 대한 fragment. ViewPager에 해당 내용 출력
+Layout Components:
+ private View downLineLayout;
+ private RecyclerView rv_down;
+RecyclerView에 목록을 출력하기 위한 Adapter: downLineAdapter
 ------------------------------------------------------------------
 (수빈) <<알림 관련>>
 ------------------------------------------------------------------
