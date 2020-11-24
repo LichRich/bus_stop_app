@@ -26,9 +26,9 @@ import android.widget.EditText;
 
 public class MainActivity extends AppCompatActivity {
 
-//    RecyclerView recyclerView;
+    RecyclerView recyclerView;
 
-//    ArrayList<BusRouteItem> items= new ArrayList<>();
+    ArrayList<BusRouteItem> items= new ArrayList<>();
     /**
      *
      * 임시로 실행하기 위한 코드
@@ -56,8 +56,6 @@ public class MainActivity extends AppCompatActivity {
             Intent intent = new Intent(getApplicationContext(), SelectedRouteInfo.class);
             startActivity(intent);
         });
-
-        /*
 
         recyclerView = findViewById(R.id.recycler);
 
@@ -157,8 +155,6 @@ public class MainActivity extends AppCompatActivity {
             //이 메소드 안에서는 UI변경 작업 가능
             Toast.makeText(MainActivity.this, s+":"+items.size(), Toast.LENGTH_SHORT).show();
         }
-
-         */
 
     }//RssFeedTask class
 
