@@ -26,9 +26,9 @@ import android.widget.EditText;
 
 public class MainActivity extends AppCompatActivity {
 
-    RecyclerView recyclerView;
+//    RecyclerView recyclerView;
 
-    ArrayList<BusRouteItem> items= new ArrayList<>();
+//    ArrayList<BusRouteItem> items= new ArrayList<>();
     /**
      *
      * 임시로 실행하기 위한 코드
@@ -42,6 +42,22 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        /**
+         *
+         * 임시로 실행하기 위한 코드
+         *
+         * */
+        et_search = (EditText) findViewById(R.id.et_search);
+        btn_search = (Button) findViewById(R.id.btn_search);
+        recycler_routeAll = (RecyclerView) findViewById(R.id.recycler);
+
+        btn_search.setOnClickListener(view -> {
+            Intent intent = new Intent(getApplicationContext(), SelectedRouteInfo.class);
+            startActivity(intent);
+        });
+
+        /*
 
         recyclerView = findViewById(R.id.recycler);
 
@@ -141,18 +157,9 @@ public class MainActivity extends AppCompatActivity {
             //이 메소드 안에서는 UI변경 작업 가능
             Toast.makeText(MainActivity.this, s+":"+items.size(), Toast.LENGTH_SHORT).show();
         }
+
+         */
+
     }//RssFeedTask class
 
 }//MainActivity class ..
-
-        et_search = (EditText) findViewById(R.id.et_search);
-        btn_search = (Button) findViewById(R.id.btn_search);
-        recycler_routeAll = (RecyclerView) findViewById(R.id.recycler_routesAll);
-
-        btn_search.setOnClickListener(view -> {
-            Intent intent = new Intent(getApplicationContext(), SelectedRouteInfo.class);
-            startActivity(intent);
-        });
-
-    }
-}

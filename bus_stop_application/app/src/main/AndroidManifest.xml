@@ -12,7 +12,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.BusStopApplication"
         android:usesCleartextTraffic="true">
-        <activity android:name=".CheckNotificationActivity"></activity>
+        <activity android:name=".CheckNotificationActivity"/>
         <activity android:name=".SelectedRouteInfo" />
         <activity android:name=".MainActivity">
             <intent-filter>
