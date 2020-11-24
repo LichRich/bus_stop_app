@@ -1,7 +1,11 @@
 package com.thinking.juicer.busstopapplication.Fragment;
 
 import android.content.Context;
+import android.net.TrafficStats;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
+import android.os.Message;
 import android.os.StrictMode;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -47,6 +51,13 @@ public class DownLineFragment extends Fragment {
     private RecyclerView rv_down;
     /*
      *
+     * Handler for using Network
+     *
+     * */
+    private static Handler mHandler;
+    private static final int THREAD_ID = 10000;
+    /*
+     *
      * Setting API url
      *
      * */
@@ -70,6 +81,7 @@ public class DownLineFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         downLineLayout =  inflater.inflate(R.layout.fragment_down_line, container, false);
+        TrafficStats.setThreadStatsTag(THREAD_ID);
 
         StrictMode.enableDefaults();
 
@@ -92,9 +104,33 @@ public class DownLineFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
-        ArrayList<SelectedRouteItem> itemList = getInfoFromAPI(url_main, num_posInfo, num_routeInfo, url_key, busRouteId);
-        downLineAdapter = new DownLineAdapter(itemList);
-        rv_down.setAdapter(downLineAdapter);
+        mHandler = new Handler(Looper.getMainLooper()) {
+            @Override
+            public void handleMessage(@NonNull Message msg) {
+                super.handleMessage(msg);
+                ArrayList<SelectedRouteItem> itemList = (ArrayList<SelectedRouteItem>) msg.obj;
+                downLineAdapter = new DownLineAdapter(itemList);
+                rv_down.setAdapter(downLineAdapter);
+            }
+        };
+
+        class DownThread extends Thread {
+
+            Handler handler = mHandler;
+
+            @Override
+            public void run() {
+                Message msg = handler.obtainMessage();
+                msg.obj = getInfoFromAPI(url_main, num_posInfo, num_routeInfo, url_key, busRouteId);
+
+                handler.sendMessage(msg);
+            }
+        }
+
+        DownThread dt = new DownThread();
+        Thread dtr = new Thread(dt);
+        dtr.start();
+
     }
 
     /*
@@ -107,7 +143,7 @@ public class DownLineFragment extends Fragment {
         ArrayList<String> station_id = new ArrayList<>();
         ArrayList<String> station_name = new ArrayList<>();
 
-        String[] url_operations = {"/busRouteInfo/getRouteInfo", "/busposinfo/getBusPosByRtid"};
+        String[] url_operations = {"/busposinfo/getBusPosByRtid", "/busRouteInfo/getStaionByRoute"};
         String url_busPos = mUrl + url_operations[op1] + k + id;
         String url_busRoute = mUrl + url_operations[op2] + k + id;
 

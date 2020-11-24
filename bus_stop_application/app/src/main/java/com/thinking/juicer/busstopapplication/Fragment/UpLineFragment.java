@@ -1,7 +1,11 @@
 package com.thinking.juicer.busstopapplication.Fragment;
 
 import android.content.Context;
+import android.net.TrafficStats;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
+import android.os.Message;
 import android.os.StrictMode;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -49,6 +53,13 @@ public class UpLineFragment extends Fragment {
      * */
     private View upLineLayout;
     private RecyclerView rv_up;
+        /*
+        *
+        * Handler for using Network
+        *
+        * */
+        private static Handler mHandler;
+        private static final int THREAD_ID = 10000;
     /*
      *
      * Setting API url
@@ -74,8 +85,9 @@ public class UpLineFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         upLineLayout =  inflater.inflate(R.layout.fragment_up_line, container, false);
-        
-        StrictMode.enableDefaults();
+        TrafficStats.setThreadStatsTag(THREAD_ID);
+
+//        StrictMode.enableDefaults();
 
         /**
          *
@@ -96,9 +108,33 @@ public class UpLineFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
-        ArrayList<SelectedRouteItem> itemList = getInfoFromAPI(url_main, num_posInfo, num_routeInfo, url_key, busRouteId);
-        upLineAdapter = new UpLineAdapter(itemList);
-        rv_up.setAdapter(upLineAdapter);
+        mHandler = new Handler(Looper.getMainLooper()) {
+            @Override
+            public void handleMessage(@NonNull Message msg) {
+                super.handleMessage(msg);
+                ArrayList<SelectedRouteItem> itemList = (ArrayList<SelectedRouteItem>) msg.obj;
+                upLineAdapter = new UpLineAdapter(itemList);
+                rv_up.setAdapter(upLineAdapter);
+            }
+        };
+
+        class UpThread extends Thread {
+
+            Handler handler = mHandler;
+
+            @Override
+            public void run() {
+                Message message = handler.obtainMessage();
+                message.obj = getInfoFromAPI(url_main, num_posInfo, num_routeInfo, url_key, busRouteId);
+
+                handler.sendMessage(message);
+            }
+        }
+
+        UpThread ut = new UpThread();
+        Thread utr = new Thread(ut);
+        utr.start();
+
     }
 
     /*
@@ -111,7 +147,7 @@ public class UpLineFragment extends Fragment {
         ArrayList<String> station_id = new ArrayList<>();
         ArrayList<String> station_name = new ArrayList<>();
 
-        String[] url_operations = {"/busRouteInfo/getRouteInfo", "/busposinfo/getBusPosByRtid"};
+        String[] url_operations = {"/busposinfo/getBusPosByRtid", "/busRouteInfo/getStaionByRoute"};
         String url_busPos = mUrl + url_operations[op1] + k + id;
         String url_busRoute = mUrl + url_operations[op2] + k + id;
 
