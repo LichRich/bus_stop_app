@@ -2,19 +2,19 @@ package com.thinking.juicer.busstopapplication.items;
 
 public class BusRouteItem {
 
-    private int num;
+    private String busNum;
 
     public BusRouteItem(){}
-    public BusRouteItem(int n) {
-        this.num = n;
+    public BusRouteItem(String n) {
+        this.busNum = n;
     }
 
-    public int getNum() {
-        return num;
+    public String getBusNum() {
+        return busNum;
     }
 
-    public void setNum(int num) {
-        this.num = num;
+    public void setBusNum(String num) {
+        this.busNum = num;
     }
 
 }
