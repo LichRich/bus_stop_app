@@ -61,7 +61,7 @@ public class MainActivity extends AppCompatActivity {
                 switch (eventType){
                     case XmlPullParser.START_TAG:
                     String startTag = parser.getName();
-                    if(startTag.equals("msgBody")){
+                    if(startTag.equals("itemList")){
                         busRouteItem = new BusRouteItem();
                     }
                     if(startTag.equals("ROUTE_NO")){
@@ -70,7 +70,7 @@ public class MainActivity extends AppCompatActivity {
                     break;
                     case XmlPullParser.END_TAG:
                         String endTag = parser.getName();
-                        if(endTag.equals("msgBody")){
+                        if(endTag.equals("itemList")){
                             arrayList.add(busRouteItem);
                         }
                         break;
