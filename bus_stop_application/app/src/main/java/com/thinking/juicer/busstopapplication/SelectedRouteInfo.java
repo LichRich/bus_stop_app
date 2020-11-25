@@ -37,7 +37,7 @@ public class SelectedRouteInfo extends AppCompatActivity {
 *
 * */
     public static boolean[] checked_bus = new boolean[60], checked_dest = new boolean[60];
-    public static boolean clickable_bus = false, clickable_dest = false;
+    public static boolean clickable_bus = true, clickable_dest = true;
 //    private boolean checked_bus = false, checked_dest = false;
     /*
      *
