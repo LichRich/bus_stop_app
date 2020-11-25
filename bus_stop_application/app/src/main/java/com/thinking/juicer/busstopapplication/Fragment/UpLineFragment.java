@@ -1,6 +1,7 @@
 package com.thinking.juicer.busstopapplication.Fragment;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.net.TrafficStats;
 import android.os.Bundle;
 import android.os.Handler;
@@ -20,6 +21,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.thinking.juicer.busstopapplication.R;
+import com.thinking.juicer.busstopapplication.SelectedRouteInfo;
 import com.thinking.juicer.busstopapplication.items.SelectedRouteItem;
 
 import org.w3c.dom.Document;
@@ -33,6 +35,7 @@ import org.xmlpull.v1.XmlPullParserFactory;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Objects;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -264,10 +267,23 @@ class UpLineAdapter extends RecyclerView.Adapter<UpLineAdapter.ViewHolder> {
         String station_name = busStops.get(position).getBusStopName();
         holder.tv_busStop.setText(station_name);
 
-        if(busStops.get(position).isBusIsHere()) {
-            holder.iv_busIcon.setImageResource(R.drawable.bus);
-        } else if (!busStops.get(position).isBusIsHere()) {
-            holder.iv_busIcon.setImageResource(R.color.white);
+        if(busStops.get(position).isBusIsHere()) {  //  버스가 여기에 있다면
+            holder.iv_busIcon.setVisibility(View.VISIBLE);
+            holder.iv_clickedBusIcon.setVisibility(View.GONE);
+            holder.blank.setVisibility(View.GONE);
+
+            //  직전 정류장에 있던 버스가 선택된 버스였던 경우
+            if(SelectedRouteInfo.checked_bus[position-1]) {
+                SelectedRouteInfo.checked_bus[position] = true;
+                holder.iv_clickedBusIcon.setVisibility(View.VISIBLE);
+                holder.iv_busIcon.setVisibility(View.GONE);
+                holder.blank.setVisibility(View.GONE);
+                SelectedRouteInfo.checked_bus[position-1] = false;
+            }
+        } else if (!busStops.get(position).isBusIsHere()) { //  버스가 여기에 없다면
+            holder.blank.setVisibility(View.VISIBLE);
+            holder.iv_busIcon.setVisibility(View.GONE);
+            holder.iv_clickedBusIcon.setVisibility(View.GONE);
         }
     }
 
@@ -276,15 +292,56 @@ class UpLineAdapter extends RecyclerView.Adapter<UpLineAdapter.ViewHolder> {
         return busStops.size();
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
-        ImageView iv_busIcon;
+    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
+        ImageView iv_busIcon, iv_clickedBusIcon;
         TextView tv_busStop;
+        View blank;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
 
             iv_busIcon = itemView.findViewById(R.id.iv_busIcon);
+            iv_clickedBusIcon = itemView.findViewById(R.id.iv_clickedBusIcon);
             tv_busStop = itemView.findViewById(R.id.tv_busStop);
+            blank = itemView.findViewById(R.id.blank);
+
+            iv_busIcon.setOnClickListener(this);
+            iv_clickedBusIcon.setOnClickListener(this);
+            tv_busStop.setOnClickListener(this);
+        }
+
+        @Override
+        public void onClick(View view) {
+
+            if(view.getId() == R.id.iv_busIcon) {   // 버스 아이콘 클릭 시
+                if(SelectedRouteInfo.clickable_bus && !SelectedRouteInfo.checked_bus[getAdapterPosition()]) {
+                    view.setVisibility(View.GONE);
+                    iv_clickedBusIcon.setVisibility(View.VISIBLE);
+                    SelectedRouteInfo.clickable_bus = false;
+                    SelectedRouteInfo.checked_bus[getAdapterPosition()] = true;
+                }
+            } else if(view.getId() == R.id.iv_clickedBusIcon) { // 이미 선택된 버스 아이콘 클릭 시
+                if(!SelectedRouteInfo.clickable_bus && SelectedRouteInfo.checked_bus[getAdapterPosition()]) {
+                    view.setVisibility(View.GONE);
+                    iv_busIcon.setVisibility(View.VISIBLE);
+                    SelectedRouteInfo.clickable_bus = true;
+                    SelectedRouteInfo.checked_bus[getAdapterPosition()] = false;
+                }
+            }
+
+            if(view.getId() == R.id.tv_busStop) {  //  버스 정류장 부분 클릭 시
+                if(SelectedRouteInfo.clickable_dest && !SelectedRouteInfo.checked_dest[getAdapterPosition()]) {
+                    tv_busStop.setBackgroundColor(Color.rgb(178,204,255));
+                    SelectedRouteInfo.clickable_dest = false;
+                    SelectedRouteInfo.checked_dest[getAdapterPosition()] = true;
+                } else if(!SelectedRouteInfo.clickable_dest && SelectedRouteInfo.checked_dest[getAdapterPosition()]) {
+                    //  이미 선택된 정류장을 눌렀을 때
+                    tv_busStop.setBackgroundColor(Color.WHITE);
+                    SelectedRouteInfo.clickable_dest = true;
+                    SelectedRouteInfo.checked_dest[getAdapterPosition()] = false;
+                }
+            }
+
         }
     }
 

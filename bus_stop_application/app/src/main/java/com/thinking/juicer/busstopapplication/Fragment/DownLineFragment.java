@@ -1,6 +1,7 @@
 package com.thinking.juicer.busstopapplication.Fragment;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.net.TrafficStats;
 import android.os.Bundle;
 import android.os.Handler;
@@ -19,6 +20,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.thinking.juicer.busstopapplication.R;
+import com.thinking.juicer.busstopapplication.SelectedRouteInfo;
 import com.thinking.juicer.busstopapplication.items.SelectedRouteItem;
 
 import org.w3c.dom.Document;
@@ -277,15 +279,57 @@ class DownLineAdapter extends RecyclerView.Adapter<DownLineAdapter.ViewHolder> {
         return busStops.size();
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
-        ImageView iv_busIcon;
+    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+        ImageView iv_busIcon, iv_clickedBusIcon;
         TextView tv_busStop;
+        View blank;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
 
             iv_busIcon = itemView.findViewById(R.id.iv_busIcon);
+            iv_clickedBusIcon = itemView.findViewById(R.id.iv_clickedBusIcon);
             tv_busStop = itemView.findViewById(R.id.tv_busStop);
+            blank = itemView.findViewById(R.id.blank);
+
+            iv_busIcon.setOnClickListener(this);
+            iv_clickedBusIcon.setOnClickListener(this);
+            tv_busStop.setOnClickListener(this);
+        }
+
+        @Override
+        public void onClick(View view) {
+
+            if(view.getId() == R.id.iv_busIcon) {   // 버스 아이콘 클릭 시
+                if(SelectedRouteInfo.clickable_bus && !SelectedRouteInfo.checked_bus[getAdapterPosition()]) {
+                    view.setVisibility(View.GONE);
+                    iv_clickedBusIcon.setVisibility(View.VISIBLE);
+                    SelectedRouteInfo.clickable_bus = false;
+                    SelectedRouteInfo.checked_bus[getAdapterPosition()] = true;
+                }
+            } else if(view.getId() == R.id.iv_clickedBusIcon) { // 이미 선택된 버스 아이콘 클릭 시
+                if(!SelectedRouteInfo.clickable_bus && SelectedRouteInfo.checked_bus[getAdapterPosition()]) {
+                    view.setVisibility(View.GONE);
+                    iv_busIcon.setVisibility(View.VISIBLE);
+                    SelectedRouteInfo.clickable_bus = true;
+                    SelectedRouteInfo.checked_bus[getAdapterPosition()] = false;
+                }
+            }
+
+            if(view.getId() == R.id.tv_busStop) {  //  버스 정류장 부분 클릭 시
+                if(SelectedRouteInfo.clickable_dest && !SelectedRouteInfo.checked_dest[getAdapterPosition()]) {
+                    tv_busStop.setBackgroundColor(Color.rgb(178,204,255));
+                    SelectedRouteInfo.clickable_dest = false;
+                    SelectedRouteInfo.checked_dest[getAdapterPosition()] = true;
+                } else if(!SelectedRouteInfo.clickable_dest && SelectedRouteInfo.checked_dest[getAdapterPosition()]) {
+                    //  이미 선택된 정류장을 눌렀을 때
+                    tv_busStop.setBackgroundColor(Color.WHITE);
+                    SelectedRouteInfo.clickable_dest = true;
+                    SelectedRouteInfo.checked_dest[getAdapterPosition()] = false;
+                }
+            }
+
+
         }
     }
 

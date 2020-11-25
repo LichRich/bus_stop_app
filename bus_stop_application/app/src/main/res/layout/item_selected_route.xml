@@ -21,7 +21,26 @@
             android:background="@color/white"
             android:layout_marginRight="3px"
             android:layout_weight="9"
-            android:src="@color/white"/>
+            android:visibility="gone"
+            android:src="@drawable/bus"/>
+
+        <ImageView
+            android:id="@+id/iv_clickedBusIcon"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/white"
+            android:layout_marginRight="3px"
+            android:layout_weight="9"
+            android:visibility="gone"
+            android:src="@drawable/bus_clicked"/>
+
+        <View
+            android:id="@+id/blank"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/white"
+            android:layout_marginRight="3px"
+            android:layout_weight="9"/>
 
         <TextView
             android:id="@+id/tv_busStop"
