@@ -20,6 +20,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.thinking.juicer.busstopapplication.R;
+import com.thinking.juicer.busstopapplication.SelectedRouteInfo;
 import com.thinking.juicer.busstopapplication.items.SelectedRouteItem;
 
 import org.w3c.dom.Document;
@@ -246,6 +247,11 @@ public class UpLineFragment extends Fragment {
 class UpLineAdapter extends RecyclerView.Adapter<UpLineAdapter.ViewHolder> {
 
     private ArrayList<SelectedRouteItem> busStops = null;
+    private OnBusItemClick onBusItemClick;
+
+    public interface OnBusItemClick {
+        void onBusItemClick(int position);
+    }
 
     @NonNull
     @Override
@@ -264,9 +270,16 @@ class UpLineAdapter extends RecyclerView.Adapter<UpLineAdapter.ViewHolder> {
         String station_name = busStops.get(position).getBusStopName();
         holder.tv_busStop.setText(station_name);
 
-        if(busStops.get(position).isBusIsHere()) {
+        if(busStops.get(position).isBusIsHere()) {  //  버스가 여기에 있다면
             holder.iv_busIcon.setImageResource(R.drawable.bus);
-        } else if (!busStops.get(position).isBusIsHere()) {
+
+            //  직전 정류장에 있던 버스가 선택된 버스였던 경우
+            if(SelectedRouteInfo.checked_bus[position-1]) {
+                SelectedRouteInfo.checked_bus[position] = true;
+                holder.iv_busIcon.setImageResource(R.drawable.bus_clicked);
+                SelectedRouteInfo.checked_bus[position-1] = false;
+            }
+        } else if (!busStops.get(position).isBusIsHere()) { //  버스가 여기에 없다면
             holder.iv_busIcon.setImageResource(R.color.white);
         }
     }
@@ -276,7 +289,7 @@ class UpLineAdapter extends RecyclerView.Adapter<UpLineAdapter.ViewHolder> {
         return busStops.size();
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
+    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
         ImageView iv_busIcon;
         TextView tv_busStop;
 
@@ -285,6 +298,32 @@ class UpLineAdapter extends RecyclerView.Adapter<UpLineAdapter.ViewHolder> {
 
             iv_busIcon = itemView.findViewById(R.id.iv_busIcon);
             tv_busStop = itemView.findViewById(R.id.tv_busStop);
+
+            iv_busIcon.setOnClickListener(this);
+            tv_busStop.setOnClickListener(this);
+        }
+
+        @Override
+        public void onClick(View view) {
+            onBusItemClick.onBusItemClick(getAdapterPosition());
+
+            if(view.getId() == R.id.iv_busIcon) {   // 버스 아이콘 부분 클릭 시
+                if(iv_busIcon.getDrawable().equals(R.drawable.bus)) {   // 공백이 아닌 버스 아이콘을 눌렀을 때
+                    if(SelectedRouteInfo.clickable_bus && !SelectedRouteInfo.checked_bus[getAdapterPosition()]) {
+                        iv_busIcon.setImageResource(R.drawable.bus_clicked);
+                        SelectedRouteInfo.clickable_bus = false;
+                        SelectedRouteInfo.checked_bus[getAdapterPosition()] = true;
+                    }
+                } else if(iv_busIcon.getDrawable().equals(R.drawable.bus_clicked)) {    // 이미 선택된 버스를 눌렀을 때
+                    if(!SelectedRouteInfo.clickable_bus && SelectedRouteInfo.checked_bus[getAdapterPosition()]) {
+                        iv_busIcon.setImageResource(R.drawable.bus);
+                        SelectedRouteInfo.clickable_bus = true;
+                        SelectedRouteInfo.checked_bus[getAdapterPosition()] = false;
+                    }
+                }
+            }
+
+
         }
     }
 
