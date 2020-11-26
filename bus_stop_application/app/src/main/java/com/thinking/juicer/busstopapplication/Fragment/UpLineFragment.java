@@ -1,6 +1,7 @@
 package com.thinking.juicer.busstopapplication.Fragment;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.net.TrafficStats;
 import android.os.Bundle;
@@ -79,8 +80,9 @@ public class UpLineFragment extends Fragment {
      * Get ROUTE_NO from intent.
      *
      * */
-    private String route_no;
+    private Intent intent;
     private String busRouteId;
+
     private UpLineAdapter upLineAdapter;
 
     public UpLineFragment() {}
@@ -98,9 +100,8 @@ public class UpLineFragment extends Fragment {
          * These must get ROUTE_NO from intent.
          *
          * */
-        route_no = "1";
-        busRouteId = "30300001";
-
+        intent = SelectedRouteInfo.getSRIntent();
+        busRouteId = intent.getStringExtra("busRouteId");
 
         rv_up = (RecyclerView) upLineLayout.findViewById(R.id.recycler_upLine);
         rv_up.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -233,6 +234,17 @@ public class UpLineFragment extends Fragment {
             SelectedRouteItem item = new SelectedRouteItem(bus_isHere.get(index), station_name.get(index));
             res.add(item);
         }
+
+        /**
+         *
+         * static variation in SelectedRouteInfo init
+         * array length = res.size()
+         *
+         * */
+//        if(SelectedRouteInfo.checked_bus == null && SelectedRouteInfo.checked_dest == null) {
+//            SelectedRouteInfo.checked_bus = new boolean[res.size()];
+//            SelectedRouteInfo.checked_dest = new boolean[res.size()];
+//        }
 
         return res;
     }

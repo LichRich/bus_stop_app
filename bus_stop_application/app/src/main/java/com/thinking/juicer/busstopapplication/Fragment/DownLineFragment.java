@@ -1,6 +1,7 @@
 package com.thinking.juicer.busstopapplication.Fragment;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.net.TrafficStats;
 import android.os.Bundle;
@@ -74,8 +75,9 @@ public class DownLineFragment extends Fragment {
      * Get ROUTE_NO from intent.
      *
      * */
-    private String route_no;
+    private Intent intent;
     private String busRouteId;
+
     private DownLineAdapter downLineAdapter;
 
     public DownLineFragment() {}
@@ -93,9 +95,8 @@ public class DownLineFragment extends Fragment {
          * These must get ROUTE_NO from intent.
          *
          * */
-        route_no = "1";
-        busRouteId = "30300001";
-
+        intent = SelectedRouteInfo.getSRIntent();
+        busRouteId = intent.getStringExtra("busRouteId");
 
         rv_down = (RecyclerView) downLineLayout.findViewById(R.id.recycler_downLine);
         rv_down.setLayoutManager(new LinearLayoutManager(getContext()));
