@@ -117,22 +117,22 @@ public class DownLineFragment extends Fragment {
             }
         };
 
-        class DownThread extends Thread {
-
-            Handler handler = mHandler;
-
-            @Override
-            public void run() {
-                Message msg = handler.obtainMessage();
-                msg.obj = getInfoFromAPI(url_main, num_posInfo, num_routeInfo, url_key, busRouteId);
-
-                handler.sendMessage(msg);
-            }
-        }
-
-        DownThread dt = new DownThread();
-        Thread dtr = new Thread(dt);
-        dtr.start();
+//        class DownThread extends Thread {
+//
+//            Handler handler = mHandler;
+//
+//            @Override
+//            public void run() {
+//                Message msg = handler.obtainMessage();
+//                msg.obj = getInfoFromAPI(url_main, num_posInfo, num_routeInfo, url_key, busRouteId);
+//
+//                handler.sendMessage(msg);
+//            }
+//        }
+//
+//        DownThread dt = new DownThread();
+//        Thread dtr = new Thread(dt);
+//        dtr.start();
 
     }
 

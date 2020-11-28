@@ -14,6 +14,9 @@ import android.view.View;
 import com.google.android.material.tabs.TabLayout;
 import com.thinking.juicer.busstopapplication.Fragment.RouteInfoPagerAdapter;
 
+import java.util.Timer;
+import java.util.TimerTask;
+
 public class SelectedRouteInfo extends AppCompatActivity {
 
 /*
@@ -57,6 +60,10 @@ public class SelectedRouteInfo extends AppCompatActivity {
         return intent;
     }
 
+    private Timer timer;
+    private TimerTask task;
+    boolean preFlag=false, postFlag=false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -65,6 +72,32 @@ public class SelectedRouteInfo extends AppCompatActivity {
 
         mTabLayout = (TabLayout) findViewById(R.id.layout_tab);
         intent = getIntent();
+
+        timer = new Timer();
+        task = new TimerTask() {
+            @Override
+            public void run() {
+                int busIndex = getIndex(checked_bus);
+                int destIndex = getIndex(checked_dest);
+
+                if((busIndex>=0) && (destIndex>=0)){
+                    preFlag=true;
+                    postFlag=true;
+                }
+                if((busIndex==destIndex) && preFlag){
+                    Intent mint = new Intent(getApplicationContext(),CheckNotificationActivity.class);
+                    startActivity(mint);
+                    preFlag = false;
+                }
+                else if((busIndex==destIndex-1) && postFlag){
+                    Intent mint = new Intent(getApplicationContext(),GetOffNotificationActivity.class);
+                    startActivity(mint);
+                    postFlag = false;
+                }
+            }
+        };
+
+        timer.schedule(task,0,500);
 
 /*
 *
@@ -101,6 +134,13 @@ public class SelectedRouteInfo extends AppCompatActivity {
 
             }
         });
+    }
+
+    int getIndex(boolean[] arr){
+        for(int i=0; i<arr.length; i++){
+            if(arr[i]==true) return i;
+        }
+        return -1;
     }
 
 }
