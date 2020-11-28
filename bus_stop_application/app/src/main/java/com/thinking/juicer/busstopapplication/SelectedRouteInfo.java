@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager.widget.ViewPager;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
@@ -46,6 +47,15 @@ public class SelectedRouteInfo extends AppCompatActivity {
      * */
     private static int currentPosition = 0;
     public static int getCurrentPosition() {return currentPosition;}
+/*
+*
+* getIntent from MainActivity
+*
+* */
+    private static Intent intent;
+    public static Intent getSRIntent() {
+        return intent;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,6 +64,7 @@ public class SelectedRouteInfo extends AppCompatActivity {
         mContext = getApplicationContext();
 
         mTabLayout = (TabLayout) findViewById(R.id.layout_tab);
+        intent = getIntent();
 
 /*
 *
