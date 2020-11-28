@@ -1,10 +1,12 @@
 package com.thinking.juicer.busstopapplication;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager.widget.ViewPager;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 
@@ -15,21 +17,35 @@ public class SelectedRouteInfo extends AppCompatActivity {
 
 /*
 *
+* TAG
+*
+* */
+    private final String TAG = "Selected Route Info";
+/*
+*
 * Layout Components
 *
 * */
     private Context mContext;
     private TabLayout mTabLayout;
-    private ViewPager mViewPager;
+    private RouteInfoViewPager mViewPager;
     private RouteInfoPagerAdapter mAdapter;
-
 /*
 *
 * Check Bus icon, Destination click
 * If both of them are checked, turn on the notification.
 *
 * */
-    private boolean checked_bus = false, checked_dest = false;
+    public static boolean[] checked_bus = new boolean[60], checked_dest = new boolean[60];
+    public static boolean clickable_bus = true, clickable_dest = true;
+//    private boolean checked_bus = false, checked_dest = false;
+    /*
+     *
+     * get current position of the tab
+     *
+     * */
+    private static int currentPosition = 0;
+    public static int getCurrentPosition() {return currentPosition;}
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,7 +69,7 @@ public class SelectedRouteInfo extends AppCompatActivity {
 *
 * */
 
-        mViewPager = (ViewPager) findViewById(R.id.pager_routeInfo);
+        mViewPager = (RouteInfoViewPager) findViewById(R.id.pager_routeInfo);
         mAdapter = new RouteInfoPagerAdapter(getSupportFragmentManager(), mTabLayout.getTabCount());
         mViewPager.setAdapter(mAdapter);
         mViewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(mTabLayout));
@@ -61,6 +77,7 @@ public class SelectedRouteInfo extends AppCompatActivity {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
                 mViewPager.setCurrentItem(tab.getPosition());
+                currentPosition = tab.getPosition();
             }
 
             @Override
@@ -75,4 +92,29 @@ public class SelectedRouteInfo extends AppCompatActivity {
         });
     }
 
+}
+
+class RouteInfoViewPager extends ViewPager {
+
+    public RouteInfoViewPager(@NonNull Context context) {
+        super(context);
+    }
+    public RouteInfoViewPager(@NonNull Context context, AttributeSet attrs) {
+        super(context, attrs);
+    }
+
+    @Override
+    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+        int height = 0;
+        for(int i = 0; i < getChildCount(); i++) {
+            View child = getChildAt(i);
+            child.measure(widthMeasureSpec, MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED));
+            int h = child.getMeasuredHeight();
+            if(h > height) {
+                height = h;
+            }
+        }
+        heightMeasureSpec = MeasureSpec.makeMeasureSpec(height, MeasureSpec.EXACTLY);
+        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+    }
 }

@@ -25,11 +25,9 @@ public class RouteInfoPagerAdapter extends FragmentPagerAdapter {
     public Fragment getItem(int position) {
         switch (position) {
             case 0:
-                UpLineFragment frag_upLine = new UpLineFragment();
-                return frag_upLine;
+                return new UpLineFragment();
             case 1:
-                DownLineFragment frag_downLine = new DownLineFragment();
-                return frag_downLine;
+                return new DownLineFragment();
             default:
                 return null;
         }
