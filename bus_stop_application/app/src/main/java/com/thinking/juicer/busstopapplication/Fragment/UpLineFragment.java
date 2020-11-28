@@ -21,6 +21,8 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.thinking.juicer.busstopapplication.CheckNotificationActivity;
+import com.thinking.juicer.busstopapplication.GetOffNotificationActivity;
 import com.thinking.juicer.busstopapplication.R;
 import com.thinking.juicer.busstopapplication.SelectedRouteInfo;
 import com.thinking.juicer.busstopapplication.items.SelectedRouteItem;
@@ -37,6 +39,8 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Objects;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -83,7 +87,8 @@ public class UpLineFragment extends Fragment {
     private Intent intent;
     private String busRouteId;
 
-    private UpLineAdapter upLineAdapter;
+    private TimerTask task;
+    private Timer timer;
 
     public UpLineFragment() {}
 
@@ -117,10 +122,35 @@ public class UpLineFragment extends Fragment {
             public void handleMessage(@NonNull Message msg) {
                 super.handleMessage(msg);
                 ArrayList<SelectedRouteItem> itemList = (ArrayList<SelectedRouteItem>) msg.obj;
-                upLineAdapter = new UpLineAdapter(itemList);
+                UpLineAdapter upLineAdapter = new UpLineAdapter(itemList);
                 rv_up.setAdapter(upLineAdapter);
+
+
+
             }
         };
+
+//        new Thread(new Runnable() {
+//            Handler handler = mHandler;
+//            @Override
+//            public void run() {
+//
+//                Message message = handler.obtainMessage();
+//                task = new TimerTask() {
+//                    @Override
+//                    public void run() {
+//                        message.obj = getInfoFromAPI(url_main, num_posInfo, num_routeInfo, url_key, busRouteId);
+//
+//                        handler.sendMessage(message);
+//                    }
+//                };
+//
+//                timer = new Timer();
+//                timer.schedule(task, 100, 0);
+//
+//
+//            }
+//        }).start();
 
         class UpThread extends Thread {
 
@@ -128,10 +158,24 @@ public class UpLineFragment extends Fragment {
 
             @Override
             public void run() {
+
                 Message message = handler.obtainMessage();
                 message.obj = getInfoFromAPI(url_main, num_posInfo, num_routeInfo, url_key, busRouteId);
 
                 handler.sendMessage(message);
+//                task = new TimerTask() {
+//                    @Override
+//                    public void run() {
+//                        message.obj = getInfoFromAPI(url_main, num_posInfo, num_routeInfo, url_key, busRouteId);
+//
+//                        handler.sendMessage(message);
+//                    }
+//                };
+//
+//                timer = new Timer();
+//                timer.schedule(task,100,0);
+
+
             }
         }
 

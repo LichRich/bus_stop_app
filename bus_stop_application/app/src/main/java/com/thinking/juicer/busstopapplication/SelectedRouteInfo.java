@@ -7,12 +7,19 @@ import androidx.viewpager.widget.ViewPager;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 
 import com.google.android.material.tabs.TabLayout;
 import com.thinking.juicer.busstopapplication.Fragment.RouteInfoPagerAdapter;
+import com.thinking.juicer.busstopapplication.Fragment.UpLineFragment;
+
+import java.util.Timer;
+import java.util.TimerTask;
+
 
 public class SelectedRouteInfo extends AppCompatActivity {
 
@@ -57,6 +64,12 @@ public class SelectedRouteInfo extends AppCompatActivity {
         return intent;
     }
 
+    private TimerTask task;
+    private Timer timer;
+//    private BusThread bt = new BusThread();
+//    private Thread bthread = new Thread(bt);
+    private boolean first = true, second = true; //알람 확인용 플래그
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -65,6 +78,9 @@ public class SelectedRouteInfo extends AppCompatActivity {
 
         mTabLayout = (TabLayout) findViewById(R.id.layout_tab);
         intent = getIntent();
+
+//        bthread.start();
+
 
 /*
 *
@@ -89,6 +105,8 @@ public class SelectedRouteInfo extends AppCompatActivity {
             public void onTabSelected(TabLayout.Tab tab) {
                 mViewPager.setCurrentItem(tab.getPosition());
                 currentPosition = tab.getPosition();
+                first=true;
+                second=true;
             }
 
             @Override
@@ -102,6 +120,54 @@ public class SelectedRouteInfo extends AppCompatActivity {
             }
         });
     }
+
+    public int indexOfArray(boolean[] checked){   // Searchng index of TRUE
+        for(int i=0; i<checked.length; i++) {
+            if (checked[i] == true) return i;
+        }
+        return -1;
+    }
+
+//    class BusThread extends Thread {
+//
+//
+//        @Override
+//        public void run() {
+//
+//            task = new TimerTask() {
+//                @Override
+//                public void run() {
+//                    task = new TimerTask() {
+//                        @Override
+//                        public void run() {
+//                            //정류장에 따른 알림
+//                            if((!clickable_bus) &&(!clickable_dest)&&first&&second) {
+//                                if(indexOfArray(checked_bus) == indexOfArray(checked_dest)+1){  //한 정거장 전
+//                                    Intent intent = new Intent(getApplicationContext(), GetOffNotificationActivity.class);
+//                                    startActivity(intent);
+//                                    first=false;
+//                                }
+//                                else if(indexOfArray(checked_bus) == indexOfArray(checked_dest)) { //도착
+//                                    Intent intent = new Intent(getApplicationContext(), CheckNotificationActivity.class);
+//                                    startActivity(intent);
+//                                    second=false;
+//                                }
+//                            }
+//
+//
+//                        }
+//                    };
+//
+//                    timer = new Timer();
+//                    timer.schedule(task,0,1000);
+//
+//                }
+//            };
+//
+//        }
+//    }
+//
+
 
 }
 
