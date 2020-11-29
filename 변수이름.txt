@@ -101,6 +101,9 @@ RecyclerView에 목록을 출력하기 위한 Adapter: downLineAdapter
 ------------------------------------------------------------------
 3. GetOffNotificationActivity.java
  -> 하차해야한다는 알림을 알려주는 activity java class
+check: 확인버튼
 ------------------------------------------------------------------
 4. CheckNotificationActivity.java
  -> 하차 여부를 묻는 activity java class
+yes : yes버튼
+no: no버튼
