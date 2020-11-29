@@ -50,7 +50,6 @@ public class DownLineFragment extends Fragment {
      * Layout Components
      *
      * */
-    private View downLineLayout;
     private RecyclerView rv_down;
     /*
      *
@@ -69,13 +68,12 @@ public class DownLineFragment extends Fragment {
     //    url_operations[1] = 노선 정보(정류장 목록 나열)
     private final int num_posInfo = 0;
     private final int num_routeInfo = 1;
-    private final String url_key = "?serviceKey=cC0rVYquPDL%2Bu44mxQ0ds5EabhA44uysOYBPVwBa0%2FeoGxSfKQgQCP4eCys0OB6VU6LUc9Ty2e%2BaBw7w61QB4g%3D%3D&busRouteId=";
+    private final String url_key = "?serviceKey=s740DpEXsLapvBKEYAEowaAXWTo5L93UPd6d7j4dBJx1y%2B7hZOgDTHBOjA5Ae5nUZigLceGKFdrU5WqIi7potw%3D%3D&busRouteId=";
     /*
      *
      * Get ROUTE_NO from intent.
      *
      * */
-    private Intent intent;
     private String busRouteId;
 
     private DownLineAdapter downLineAdapter;
@@ -84,18 +82,12 @@ public class DownLineFragment extends Fragment {
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-        downLineLayout =  inflater.inflate(R.layout.fragment_down_line, container, false);
+        View downLineLayout =  inflater.inflate(R.layout.fragment_down_line, container, false);
         TrafficStats.setThreadStatsTag(THREAD_ID);
 
         StrictMode.enableDefaults();
 
-        /**
-         *
-         * These values are just temp values.
-         * These must get ROUTE_NO from intent.
-         *
-         * */
-        intent = SelectedRouteInfo.getSRIntent();
+        Intent intent = SelectedRouteInfo.getSRIntent();
         busRouteId = intent.getStringExtra("busRouteId");
 
         rv_down = (RecyclerView) downLineLayout.findViewById(R.id.recycler_downLine);
@@ -119,7 +111,7 @@ public class DownLineFragment extends Fragment {
 
         class DownThread extends Thread {
 
-            Handler handler = mHandler;
+            final Handler handler = mHandler;
 
             @Override
             public void run() {
@@ -249,7 +241,7 @@ public class DownLineFragment extends Fragment {
 
 class DownLineAdapter extends RecyclerView.Adapter<DownLineAdapter.ViewHolder> {
 
-    private ArrayList<SelectedRouteItem> busStops = null;
+    private final ArrayList<SelectedRouteItem> busStops;
 
     @NonNull
     @Override
@@ -258,9 +250,8 @@ class DownLineAdapter extends RecyclerView.Adapter<DownLineAdapter.ViewHolder> {
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
         View view = inflater.inflate(R.layout.item_selected_route, parent, false);
-        DownLineAdapter.ViewHolder viewHolder = new DownLineAdapter.ViewHolder(view);
 
-        return viewHolder;
+        return new ViewHolder(view);
     }
 
     @Override
@@ -280,7 +271,7 @@ class DownLineAdapter extends RecyclerView.Adapter<DownLineAdapter.ViewHolder> {
         return busStops.size();
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    public static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         ImageView iv_busIcon, iv_clickedBusIcon;
         TextView tv_busStop;
         View blank;
