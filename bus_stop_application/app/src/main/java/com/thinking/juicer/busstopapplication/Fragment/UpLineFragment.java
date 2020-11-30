@@ -8,8 +8,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
-import android.os.StrictMode;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -32,11 +30,8 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
-import org.xmlpull.v1.XmlPullParser;
-import org.xmlpull.v1.XmlPullParserFactory;
 
 import java.io.IOException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.Objects;
 import java.util.Timer;
@@ -59,14 +54,13 @@ public class UpLineFragment extends Fragment {
      * Layout Components
      *
      * */
-    private View upLineLayout;
     private RecyclerView rv_up;
         /*
         *
         * Handler for using Network
         *
         * */
-        private static Handler mHandler;
+        private Handler mHandler;
         private static final int THREAD_ID = 10000;
     /*
      *
@@ -78,13 +72,12 @@ public class UpLineFragment extends Fragment {
 //    url_operations[1] = 노선 정보(정류장 목록 나열)
     private final int num_posInfo = 0;
     private final int num_routeInfo = 1;
-    private final String url_key = "?serviceKey=cC0rVYquPDL%2Bu44mxQ0ds5EabhA44uysOYBPVwBa0%2FeoGxSfKQgQCP4eCys0OB6VU6LUc9Ty2e%2BaBw7w61QB4g%3D%3D&busRouteId=";
+    private final String url_key = "?serviceKey=N9x0ED%2BuCBJqyok37iImcDr0gUaIdjzZSSReUuciozLoPPfPGRx0pJsAiBmMwst6%2FOxuM3yYLkFAE0Q4Zp8hbQ%3D%3D&busRouteId=";
     /*
      *
      * Get ROUTE_NO from intent.
      *
      * */
-    private Intent intent;
     private String busRouteId;
 
     private TimerTask task;
@@ -94,18 +87,10 @@ public class UpLineFragment extends Fragment {
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-        upLineLayout =  inflater.inflate(R.layout.fragment_up_line, container, false);
+        View upLineLayout =  inflater.inflate(R.layout.fragment_up_line, container, false);
         TrafficStats.setThreadStatsTag(THREAD_ID);
 
-//        StrictMode.enableDefaults();
-
-        /**
-         *
-         * These values are just temp values.
-         * These must get ROUTE_NO from intent.
-         *
-         * */
-        intent = SelectedRouteInfo.getSRIntent();
+        Intent intent = SelectedRouteInfo.getSRIntent();
         busRouteId = intent.getStringExtra("busRouteId");
 
         rv_up = (RecyclerView) upLineLayout.findViewById(R.id.recycler_upLine);
@@ -130,31 +115,10 @@ public class UpLineFragment extends Fragment {
             }
         };
 
-//        new Thread(new Runnable() {
-//            Handler handler = mHandler;
-//            @Override
-//            public void run() {
-//
-//                Message message = handler.obtainMessage();
-//                task = new TimerTask() {
-//                    @Override
-//                    public void run() {
-//                        message.obj = getInfoFromAPI(url_main, num_posInfo, num_routeInfo, url_key, busRouteId);
-//
-//                        handler.sendMessage(message);
-//                    }
-//                };
-//
-//                timer = new Timer();
-//                timer.schedule(task, 100, 0);
-//
-//
-//            }
-//        }).start();
 
         class UpThread extends Thread {
 
-            Handler handler = mHandler;
+            final Handler handler = mHandler;
 
             @Override
             public void run() {
@@ -163,17 +127,17 @@ public class UpLineFragment extends Fragment {
                 message.obj = getInfoFromAPI(url_main, num_posInfo, num_routeInfo, url_key, busRouteId);
 
                 handler.sendMessage(message);
-//                task = new TimerTask() {
-//                    @Override
-//                    public void run() {
-//                        message.obj = getInfoFromAPI(url_main, num_posInfo, num_routeInfo, url_key, busRouteId);
-//
-//                        handler.sendMessage(message);
-//                    }
-//                };
-//
-//                timer = new Timer();
-//                timer.schedule(task,100,0);
+                task = new TimerTask() {
+                    @Override
+                    public void run() {
+                        message.obj = getInfoFromAPI(url_main, num_posInfo, num_routeInfo, url_key, busRouteId);
+
+                        handler.sendMessage(message);
+                    }
+                };
+
+                timer = new Timer();
+                timer.schedule(task,100,0);
 
 
             }
@@ -304,7 +268,7 @@ public class UpLineFragment extends Fragment {
 
 class UpLineAdapter extends RecyclerView.Adapter<UpLineAdapter.ViewHolder> {
 
-    private ArrayList<SelectedRouteItem> busStops = null;
+    private final ArrayList<SelectedRouteItem> busStops;
 
     @NonNull
     @Override
@@ -313,9 +277,8 @@ class UpLineAdapter extends RecyclerView.Adapter<UpLineAdapter.ViewHolder> {
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
         View view = inflater.inflate(R.layout.item_selected_route, parent, false);
-        UpLineAdapter.ViewHolder viewHolder = new UpLineAdapter.ViewHolder(view);
 
-        return viewHolder;
+        return new ViewHolder(view);
     }
 
     @Override
@@ -348,7 +311,7 @@ class UpLineAdapter extends RecyclerView.Adapter<UpLineAdapter.ViewHolder> {
         return busStops.size();
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
+    public static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
         ImageView iv_busIcon, iv_clickedBusIcon;
         TextView tv_busStop;
         View blank;
