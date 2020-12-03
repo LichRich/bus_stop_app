@@ -32,6 +32,8 @@ import org.xml.sax.SAXException;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -68,7 +70,7 @@ public class DownLineFragment extends Fragment {
     //    url_operations[1] = 노선 정보(정류장 목록 나열)
     private final int num_posInfo = 0;
     private final int num_routeInfo = 1;
-    private final String url_key = "?serviceKey=N9x0ED%2BuCBJqyok37iImcDr0gUaIdjzZSSReUuciozLoPPfPGRx0pJsAiBmMwst6%2FOxuM3yYLkFAE0Q4Zp8hbQ%3D%3D&busRouteId=";
+    private final String url_key = "?serviceKey=HntIzh0TwfhWUCDfBN6E5chJKpNN3LQwIORIX85PkejkQPwTx%2BpUpsKnRBMzK2XHnrpdMNJJnxQFF6HcSu53DQ%3D%3D&busRouteId=";
     /*
      *
      * Get ROUTE_NO from intent.
@@ -77,6 +79,9 @@ public class DownLineFragment extends Fragment {
     private String busRouteId;
 
     private DownLineAdapter downLineAdapter;
+
+    private TimerTask task;
+    private Timer timer;
 
     public DownLineFragment() {}
 
@@ -109,16 +114,29 @@ public class DownLineFragment extends Fragment {
             }
         };
 
+
+
         class DownThread extends Thread {
 
             final Handler handler = mHandler;
 
             @Override
             public void run() {
-                Message msg = handler.obtainMessage();
-                msg.obj = getInfoFromAPI(url_main, num_posInfo, num_routeInfo, url_key, busRouteId);
+                        Message msg = handler.obtainMessage();
+                        msg.obj = getInfoFromAPI(url_main, num_posInfo, num_routeInfo, url_key, busRouteId);
+                        handler.sendMessage(msg);
 
-                handler.sendMessage(msg);
+                task = new TimerTask() {
+                    @Override
+                    public void run() {
+//                        Message msg = handler.obtainMessage();
+//                        msg.obj = getInfoFromAPI(url_main, num_posInfo, num_routeInfo, url_key, busRouteId);
+//                        handler.sendMessage(msg);
+                    }
+                };
+
+                timer = new Timer();
+//                timer.schedule(task,10,50000);
             }
         }
 

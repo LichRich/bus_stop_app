@@ -16,6 +16,8 @@ public class GetOffNotificationActivity  extends AppCompatActivity {
 
         getOff = findViewById(R.id.btn_notificationOk);
 
+
+
         getOff.setOnClickListener(new View.OnClickListener() {
 
             @Override
