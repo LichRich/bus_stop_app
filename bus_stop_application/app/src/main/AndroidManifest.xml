@@ -12,8 +12,8 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.BusStopApplication"
         android:usesCleartextTraffic="true">
-        <activity android:name=".CheckNotificationActivity" android:theme="@android:style/Theme.Dialog"/>
-        <activity android:name=".GetOffNotificationActivity" android:theme="@android:style/Theme.Dialog"/>
+        <activity android:name=".CheckNotificationActivity" android:screenOrientation="unspecified" android:theme="@style/popupTheme" />
+        <activity android:name=".GetOffNotificationActivity" android:screenOrientation="unspecified" android:theme="@style/popupTheme" />
         <activity android:name=".SelectedRouteInfo" />
         <activity android:name=".MainActivity">
             <intent-filter>

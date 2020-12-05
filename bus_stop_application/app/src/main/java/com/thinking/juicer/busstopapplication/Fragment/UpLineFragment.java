@@ -72,7 +72,7 @@ public class UpLineFragment extends Fragment {
 //    url_operations[1] = 노선 정보(정류장 목록 나열)
     private final int num_posInfo = 0;
     private final int num_routeInfo = 1;
-    private final String url_key = "?serviceKey=HntIzh0TwfhWUCDfBN6E5chJKpNN3LQwIORIX85PkejkQPwTx%2BpUpsKnRBMzK2XHnrpdMNJJnxQFF6HcSu53DQ%3D%3D&busRouteId=";
+    private final String url_key = "?serviceKey=s740DpEXsLapvBKEYAEowaAXWTo5L93UPd6d7j4dBJx1y%2B7hZOgDTHBOjA5Ae5nUZigLceGKFdrU5WqIi7potw%3D%3D&busRouteId=";
     /*
      *
      * Get ROUTE_NO from intent.
@@ -138,7 +138,7 @@ public class UpLineFragment extends Fragment {
                 };
 
                 timer = new Timer();
-//                timer.schedule(task,100,50000);
+//                timer.schedule(task,100,10000);
 
 
             }
@@ -339,6 +339,8 @@ class UpLineAdapter extends RecyclerView.Adapter<UpLineAdapter.ViewHolder> {
                     iv_clickedBusIcon.setVisibility(View.VISIBLE);
                     SelectedRouteInfo.clickable_bus = false;
                     SelectedRouteInfo.checked_bus[getAdapterPosition()] = true;
+                    SelectedRouteInfo.firstA=true;
+                    SelectedRouteInfo.secondA=true;
                 }
             } else if(view.getId() == R.id.iv_clickedBusIcon) { // 이미 선택된 버스 아이콘 클릭 시
                 if(!SelectedRouteInfo.clickable_bus && SelectedRouteInfo.checked_bus[getAdapterPosition()]) {
@@ -346,6 +348,8 @@ class UpLineAdapter extends RecyclerView.Adapter<UpLineAdapter.ViewHolder> {
                     iv_busIcon.setVisibility(View.VISIBLE);
                     SelectedRouteInfo.clickable_bus = true;
                     SelectedRouteInfo.checked_bus[getAdapterPosition()] = false;
+                    SelectedRouteInfo.firstA=true;
+                    SelectedRouteInfo.secondA=true;
                 }
             }
 
@@ -354,11 +358,16 @@ class UpLineAdapter extends RecyclerView.Adapter<UpLineAdapter.ViewHolder> {
                     tv_busStop.setBackgroundColor(Color.rgb(178,204,255));
                     SelectedRouteInfo.clickable_dest = false;
                     SelectedRouteInfo.checked_dest[getAdapterPosition()] = true;
+                    SelectedRouteInfo.firstA=true;
+                    SelectedRouteInfo.secondA=true;
+
                 } else if(!SelectedRouteInfo.clickable_dest && SelectedRouteInfo.checked_dest[getAdapterPosition()]) {
                     //  이미 선택된 정류장을 눌렀을 때
                     tv_busStop.setBackgroundColor(Color.WHITE);
                     SelectedRouteInfo.clickable_dest = true;
                     SelectedRouteInfo.checked_dest[getAdapterPosition()] = false;
+                    SelectedRouteInfo.firstA=true;
+                    SelectedRouteInfo.secondA=true;
                 }
             }
 
