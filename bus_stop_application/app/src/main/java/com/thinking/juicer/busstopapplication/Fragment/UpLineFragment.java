@@ -19,6 +19,8 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.thinking.juicer.busstopapplication.CheckNotificationActivity;
+import com.thinking.juicer.busstopapplication.GetOffNotificationActivity;
 import com.thinking.juicer.busstopapplication.R;
 import com.thinking.juicer.busstopapplication.SelectedRouteInfo;
 import com.thinking.juicer.busstopapplication.items.SelectedRouteItem;
@@ -31,6 +33,9 @@ import org.xml.sax.SAXException;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Objects;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -67,7 +72,7 @@ public class UpLineFragment extends Fragment {
 //    url_operations[1] = 노선 정보(정류장 목록 나열)
     private final int num_posInfo = 0;
     private final int num_routeInfo = 1;
-    private final String url_key = "?serviceKey=N9x0ED%2BuCBJqyok37iImcDr0gUaIdjzZSSReUuciozLoPPfPGRx0pJsAiBmMwst6%2FOxuM3yYLkFAE0Q4Zp8hbQ%3D%3D&busRouteId=";
+    private final String url_key = "?serviceKey=s740DpEXsLapvBKEYAEowaAXWTo5L93UPd6d7j4dBJx1y%2B7hZOgDTHBOjA5Ae5nUZigLceGKFdrU5WqIi7potw%3D%3D&busRouteId=";
     /*
      *
      * Get ROUTE_NO from intent.
@@ -75,7 +80,8 @@ public class UpLineFragment extends Fragment {
      * */
     private String busRouteId;
 
-    private UpLineAdapter upLineAdapter;
+    private TimerTask task;
+    private Timer timer;
 
     public UpLineFragment() {}
 
@@ -101,10 +107,14 @@ public class UpLineFragment extends Fragment {
             public void handleMessage(@NonNull Message msg) {
                 super.handleMessage(msg);
                 ArrayList<SelectedRouteItem> itemList = (ArrayList<SelectedRouteItem>) msg.obj;
-                upLineAdapter = new UpLineAdapter(itemList);
+                UpLineAdapter upLineAdapter = new UpLineAdapter(itemList);
                 rv_up.setAdapter(upLineAdapter);
+
+
+
             }
         };
+
 
         class UpThread extends Thread {
 
@@ -112,10 +122,25 @@ public class UpLineFragment extends Fragment {
 
             @Override
             public void run() {
+
                 Message message = handler.obtainMessage();
                 message.obj = getInfoFromAPI(url_main, num_posInfo, num_routeInfo, url_key, busRouteId);
 
                 handler.sendMessage(message);
+                task = new TimerTask() {
+                    @Override
+                    public void run() {
+                        Message message = handler.obtainMessage();
+                        message.obj = getInfoFromAPI(url_main, num_posInfo, num_routeInfo, url_key, busRouteId);
+
+                        handler.sendMessage(message);
+                    }
+                };
+
+                timer = new Timer();
+                timer.schedule(task,100,20000);
+
+
             }
         }
 
@@ -262,6 +287,16 @@ class UpLineAdapter extends RecyclerView.Adapter<UpLineAdapter.ViewHolder> {
         String station_name = busStops.get(position).getBusStopName();
         holder.tv_busStop.setText(station_name);
 
+
+        if(SelectedRouteInfo.checked_bus[position]==true) { //새로고침할 때 버스 클릭아이콘 유지 (수정필요)
+            holder.iv_busIcon.setVisibility(View.GONE);
+            holder.blank.setVisibility(View.GONE);
+            holder.iv_clickedBusIcon.setVisibility(View.VISIBLE);
+        }
+        if(SelectedRouteInfo.checked_dest[position]==true){ //새로고침 할 때 정류장 클릭배경색 유지
+            holder.tv_busStop.setBackgroundColor(Color.rgb(178,204,255));
+        }
+
         if(busStops.get(position).isBusIsHere()) {  //  버스가 여기에 있다면
             holder.iv_busIcon.setVisibility(View.VISIBLE);
             holder.iv_clickedBusIcon.setVisibility(View.GONE);
@@ -303,6 +338,7 @@ class UpLineAdapter extends RecyclerView.Adapter<UpLineAdapter.ViewHolder> {
             iv_busIcon.setOnClickListener(this);
             iv_clickedBusIcon.setOnClickListener(this);
             tv_busStop.setOnClickListener(this);
+
         }
 
         @Override
@@ -314,6 +350,8 @@ class UpLineAdapter extends RecyclerView.Adapter<UpLineAdapter.ViewHolder> {
                     iv_clickedBusIcon.setVisibility(View.VISIBLE);
                     SelectedRouteInfo.clickable_bus = false;
                     SelectedRouteInfo.checked_bus[getAdapterPosition()] = true;
+                    SelectedRouteInfo.firstA=true;
+                    SelectedRouteInfo.secondA=true;
                 }
             } else if(view.getId() == R.id.iv_clickedBusIcon) { // 이미 선택된 버스 아이콘 클릭 시
                 if(!SelectedRouteInfo.clickable_bus && SelectedRouteInfo.checked_bus[getAdapterPosition()]) {
@@ -321,6 +359,8 @@ class UpLineAdapter extends RecyclerView.Adapter<UpLineAdapter.ViewHolder> {
                     iv_busIcon.setVisibility(View.VISIBLE);
                     SelectedRouteInfo.clickable_bus = true;
                     SelectedRouteInfo.checked_bus[getAdapterPosition()] = false;
+                    SelectedRouteInfo.firstA=true;
+                    SelectedRouteInfo.secondA=true;
                 }
             }
 
@@ -329,11 +369,16 @@ class UpLineAdapter extends RecyclerView.Adapter<UpLineAdapter.ViewHolder> {
                     tv_busStop.setBackgroundColor(Color.rgb(178,204,255));
                     SelectedRouteInfo.clickable_dest = false;
                     SelectedRouteInfo.checked_dest[getAdapterPosition()] = true;
+                    SelectedRouteInfo.firstA=true;
+                    SelectedRouteInfo.secondA=true;
+
                 } else if(!SelectedRouteInfo.clickable_dest && SelectedRouteInfo.checked_dest[getAdapterPosition()]) {
                     //  이미 선택된 정류장을 눌렀을 때
                     tv_busStop.setBackgroundColor(Color.WHITE);
                     SelectedRouteInfo.clickable_dest = true;
                     SelectedRouteInfo.checked_dest[getAdapterPosition()] = false;
+                    SelectedRouteInfo.firstA=true;
+                    SelectedRouteInfo.secondA=true;
                 }
             }
 
