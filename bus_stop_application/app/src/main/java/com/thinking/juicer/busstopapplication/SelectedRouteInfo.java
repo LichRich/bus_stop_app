@@ -100,12 +100,12 @@ public class SelectedRouteInfo extends AppCompatActivity {
             @Override
             public void run() {
                 //정류장에 따른 알림
-                if ((!clickable_bus) && (!clickable_dest) && firstA && secondA) {
-                    if (indexOfArray(checked_bus) == indexOfArray(checked_dest) - 1) {  //한 정거장 전
+                if ((!clickable_bus) && (!clickable_dest)) {
+                    if ((indexOfArray(checked_bus) == indexOfArray(checked_dest) - 1)&&firstA) {  //한 정거장 전
                         Intent intent = new Intent(getApplicationContext(), GetOffNotificationActivity.class);
                         startActivity(intent);
                         firstA = false;
-                    } else if (indexOfArray(checked_bus) == indexOfArray(checked_dest)) { //도착
+                    } else if ((indexOfArray(checked_bus) == indexOfArray(checked_dest))&&secondA) { //도착
                         Intent intent = new Intent(getApplicationContext(), CheckNotificationActivity.class);
                         startActivity(intent);
                         secondA = false;
@@ -158,7 +158,7 @@ public class SelectedRouteInfo extends AppCompatActivity {
         });
     }
 
-    public int indexOfArray(boolean[] checked){   // Searchng index of TRUE
+    public static int indexOfArray(boolean[] checked){   // Searchng index of TRUE
         for(int i=0; i<checked.length; i++) {
             if (checked[i] == true) return i;
         }

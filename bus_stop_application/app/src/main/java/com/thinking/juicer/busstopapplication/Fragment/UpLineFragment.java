@@ -123,7 +123,7 @@ public class UpLineFragment extends Fragment {
             @Override
             public void run() {
 
-                                Message message = handler.obtainMessage();
+                Message message = handler.obtainMessage();
                 message.obj = getInfoFromAPI(url_main, num_posInfo, num_routeInfo, url_key, busRouteId);
 
                 handler.sendMessage(message);
@@ -138,7 +138,7 @@ public class UpLineFragment extends Fragment {
                 };
 
                 timer = new Timer();
-                timer.schedule(task,100,10000);
+                timer.schedule(task,100,20000);
 
 
             }
@@ -287,6 +287,16 @@ class UpLineAdapter extends RecyclerView.Adapter<UpLineAdapter.ViewHolder> {
         String station_name = busStops.get(position).getBusStopName();
         holder.tv_busStop.setText(station_name);
 
+
+        if(SelectedRouteInfo.checked_bus[position]==true) { //새로고침할 때 버스 클릭아이콘 유지 (수정필요)
+            holder.iv_busIcon.setVisibility(View.GONE);
+            holder.blank.setVisibility(View.GONE);
+            holder.iv_clickedBusIcon.setVisibility(View.VISIBLE);
+        }
+        if(SelectedRouteInfo.checked_dest[position]==true){ //새로고침 할 때 정류장 클릭배경색 유지
+            holder.tv_busStop.setBackgroundColor(Color.rgb(178,204,255));
+        }
+
         if(busStops.get(position).isBusIsHere()) {  //  버스가 여기에 있다면
             holder.iv_busIcon.setVisibility(View.VISIBLE);
             holder.iv_clickedBusIcon.setVisibility(View.GONE);
@@ -328,6 +338,7 @@ class UpLineAdapter extends RecyclerView.Adapter<UpLineAdapter.ViewHolder> {
             iv_busIcon.setOnClickListener(this);
             iv_clickedBusIcon.setOnClickListener(this);
             tv_busStop.setOnClickListener(this);
+
         }
 
         @Override

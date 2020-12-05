@@ -137,6 +137,7 @@ public class DownLineFragment extends Fragment {
 
                 timer = new Timer();
 //                timer.schedule(task,50,10000);
+
             }
         }
 
