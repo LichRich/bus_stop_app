@@ -3,8 +3,11 @@ package com.thinking.juicer.busstopapplication;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -26,8 +29,8 @@ import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
 
-   ListView lv;
-
+    ListView lv;
+    ArrayList<String> routeIdList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,6 +38,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         lv = (ListView)findViewById(R.id.lv);
+        routeIdList = new ArrayList<>();
 
         ArrayList<BusRouteItem> list = xmlParser();
         String[] data = new String[list.size()];
@@ -43,6 +47,16 @@ public class MainActivity extends AppCompatActivity {
         }
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(getApplicationContext(), android.R.layout.simple_list_item_1,data);
         lv.setAdapter(adapter);
+
+        lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                Intent intent = new Intent(getApplicationContext(), SelectedRouteInfo.class);
+                intent.putExtra("busRouteId", routeIdList.get(i));
+                startActivity(intent);
+            }
+        });
+
 
     }
 
@@ -63,6 +77,9 @@ public class MainActivity extends AppCompatActivity {
                     String startTag = parser.getName();
                     if(startTag.equals("itemList")){
                         busRouteItem = new BusRouteItem();
+                    }
+                    if(startTag.equals("ROUTE_CD")){
+                        routeIdList.add(parser.nextText());
                     }
                     if(startTag.equals("ROUTE_NO")){
                         busRouteItem.setBusNum(parser.nextText());
