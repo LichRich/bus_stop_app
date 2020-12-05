@@ -68,13 +68,15 @@ public class SelectedRouteInfo extends AppCompatActivity {
     private Timer timer;
     private BusThread bt = new BusThread();
     private Thread bthread = new Thread(bt);
-    public static boolean firstA = true, secondA = true; //알람 확인용 플래그
+    public static boolean firstA , secondA ; //알람 확인용 플래그
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        firstA=true; secondA=true;
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_selected_route_info);
         mContext = getApplicationContext();
+        clickable_bus=true; clickable_dest=true;
 
         mTabLayout = (TabLayout) findViewById(R.id.layout_tab);
         intent = getIntent();
@@ -107,6 +109,7 @@ public class SelectedRouteInfo extends AppCompatActivity {
                         Intent intent = new Intent(getApplicationContext(), CheckNotificationActivity.class);
                         startActivity(intent);
                         secondA = false;
+                        finish();
                     }
                 }
             }

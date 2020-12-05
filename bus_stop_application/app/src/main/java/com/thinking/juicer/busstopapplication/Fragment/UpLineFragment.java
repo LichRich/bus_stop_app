@@ -138,7 +138,7 @@ public class UpLineFragment extends Fragment {
                 };
 
                 timer = new Timer();
-//                timer.schedule(task,100,10000);
+                timer.schedule(task,100,10000);
 
 
             }
