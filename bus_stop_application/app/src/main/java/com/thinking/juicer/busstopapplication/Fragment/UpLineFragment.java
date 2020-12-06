@@ -87,7 +87,7 @@ public class UpLineFragment extends Fragment {
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-        View upLineLayout =  inflater.inflate(R.layout.fragment_up_line, container, false);
+        final View upLineLayout =  inflater.inflate(R.layout.fragment_up_line, container, false);
         TrafficStats.setThreadStatsTag(THREAD_ID);
 
         Intent intent = SelectedRouteInfo.getSRIntent();
@@ -279,7 +279,7 @@ class UpLineAdapter extends RecyclerView.Adapter<UpLineAdapter.ViewHolder> {
 
         View view = inflater.inflate(R.layout.item_selected_route, parent, false);
 
-        return new ViewHolder(view);
+        return new UpLineAdapter.ViewHolder(view);
     }
 
     @Override
@@ -287,13 +287,7 @@ class UpLineAdapter extends RecyclerView.Adapter<UpLineAdapter.ViewHolder> {
         String station_name = busStops.get(position).getBusStopName();
         holder.tv_busStop.setText(station_name);
 
-
-        if(SelectedRouteInfo.checked_bus[position]==true) { //새로고침할 때 버스 클릭아이콘 유지 (수정필요)
-            holder.iv_busIcon.setVisibility(View.GONE);
-            holder.blank.setVisibility(View.GONE);
-            holder.iv_clickedBusIcon.setVisibility(View.VISIBLE);
-        }
-        if(SelectedRouteInfo.checked_dest[position]==true){ //새로고침 할 때 정류장 클릭배경색 유지
+        if(SelectedRouteInfo.checked_dest[position]){ //새로고침 할 때 정류장 클릭배경색 유지
             holder.tv_busStop.setBackgroundColor(Color.rgb(178,204,255));
         }
 
@@ -310,6 +304,13 @@ class UpLineAdapter extends RecyclerView.Adapter<UpLineAdapter.ViewHolder> {
                 holder.blank.setVisibility(View.GONE);
                 SelectedRouteInfo.checked_bus[position-1] = false;
             }
+
+            if(SelectedRouteInfo.checked_bus[position]) { //새로고침할 때 버스 클릭아이콘 유지 (수정필요)
+                holder.iv_busIcon.setVisibility(View.GONE);
+                holder.blank.setVisibility(View.GONE);
+                holder.iv_clickedBusIcon.setVisibility(View.VISIBLE);
+            }
+
         } else if (!busStops.get(position).isBusIsHere()) { //  버스가 여기에 없다면
             holder.blank.setVisibility(View.VISIBLE);
             holder.iv_busIcon.setVisibility(View.GONE);
@@ -322,7 +323,7 @@ class UpLineAdapter extends RecyclerView.Adapter<UpLineAdapter.ViewHolder> {
         return busStops.size();
     }
 
-    public static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
+    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
         ImageView iv_busIcon, iv_clickedBusIcon;
         TextView tv_busStop;
         View blank;
