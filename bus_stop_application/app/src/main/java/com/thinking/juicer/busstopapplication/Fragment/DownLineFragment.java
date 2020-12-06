@@ -115,7 +115,6 @@ public class DownLineFragment extends Fragment {
         };
 
 
-
         class DownThread extends Thread {
 
             final Handler handler = mHandler;
