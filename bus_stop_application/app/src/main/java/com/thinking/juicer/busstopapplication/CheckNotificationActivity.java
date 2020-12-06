@@ -2,7 +2,9 @@ package com.thinking.juicer.busstopapplication;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
 import android.os.Bundle;
+import android.os.Vibrator;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
@@ -17,8 +19,12 @@ public class CheckNotificationActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_check_notification);
 
+
+        final Vibrator vibrator = (Vibrator)getSystemService(Context.VIBRATOR_SERVICE);
         yes = findViewById(R.id.btn_yes);
         no = findViewById(R.id.btn_no);
+
+        vibrator.vibrate(1000);
 
         yes.setOnClickListener(new View.OnClickListener() {
             @Override
