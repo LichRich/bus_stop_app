@@ -32,6 +32,8 @@ import org.xml.sax.SAXException;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -50,14 +52,13 @@ public class DownLineFragment extends Fragment {
      * Layout Components
      *
      * */
-    private View downLineLayout;
     private RecyclerView rv_down;
     /*
      *
      * Handler for using Network
      *
      * */
-    private static Handler mHandler;
+    private Handler mHandler;
     private static final int THREAD_ID = 10000;
     /*
      *
@@ -69,33 +70,29 @@ public class DownLineFragment extends Fragment {
     //    url_operations[1] = 노선 정보(정류장 목록 나열)
     private final int num_posInfo = 0;
     private final int num_routeInfo = 1;
-    private final String url_key = "?serviceKey=cC0rVYquPDL%2Bu44mxQ0ds5EabhA44uysOYBPVwBa0%2FeoGxSfKQgQCP4eCys0OB6VU6LUc9Ty2e%2BaBw7w61QB4g%3D%3D&busRouteId=";
+    private final String url_key = "?serviceKey=s740DpEXsLapvBKEYAEowaAXWTo5L93UPd6d7j4dBJx1y%2B7hZOgDTHBOjA5Ae5nUZigLceGKFdrU5WqIi7potw%3D%3D&busRouteId=";
     /*
      *
      * Get ROUTE_NO from intent.
      *
      * */
-    private Intent intent;
     private String busRouteId;
 
     private DownLineAdapter downLineAdapter;
+
+    private TimerTask task;
+    private Timer timer;
 
     public DownLineFragment() {}
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-        downLineLayout =  inflater.inflate(R.layout.fragment_down_line, container, false);
+        final View downLineLayout =  inflater.inflate(R.layout.fragment_down_line, container, false);
         TrafficStats.setThreadStatsTag(THREAD_ID);
 
-        StrictMode.enableDefaults();
+//        StrictMode.enableDefaults();
 
-        /**
-         *
-         * These values are just temp values.
-         * These must get ROUTE_NO from intent.
-         *
-         * */
-        intent = SelectedRouteInfo.getSRIntent();
+        Intent intent = SelectedRouteInfo.getSRIntent();
         busRouteId = intent.getStringExtra("busRouteId");
 
         rv_down = (RecyclerView) downLineLayout.findViewById(R.id.recycler_downLine);
@@ -117,22 +114,35 @@ public class DownLineFragment extends Fragment {
             }
         };
 
-//        class DownThread extends Thread {
-//
-//            Handler handler = mHandler;
-//
-//            @Override
-//            public void run() {
-//                Message msg = handler.obtainMessage();
-//                msg.obj = getInfoFromAPI(url_main, num_posInfo, num_routeInfo, url_key, busRouteId);
-//
-//                handler.sendMessage(msg);
-//            }
-//        }
-//
-//        DownThread dt = new DownThread();
-//        Thread dtr = new Thread(dt);
-//        dtr.start();
+
+        class DownThread extends Thread {
+
+            final Handler handler = mHandler;
+
+            @Override
+            public void run() {
+                Message msg = handler.obtainMessage();
+                msg.obj = getInfoFromAPI(url_main, num_posInfo, num_routeInfo, url_key, busRouteId);
+                handler.sendMessage(msg);
+
+                task = new TimerTask() {
+                    @Override
+                    public void run() {
+                    Message msg = handler.obtainMessage();
+                    msg.obj = getInfoFromAPI(url_main, num_posInfo, num_routeInfo, url_key, busRouteId);
+                    handler.sendMessage(msg);
+                    }
+                };
+
+                timer = new Timer();
+                timer.schedule(task,100,20000);
+
+            }
+        }
+
+        DownThread dt = new DownThread();
+        Thread dtr = new Thread(dt);
+        dtr.start();
 
     }
 
@@ -249,7 +259,7 @@ public class DownLineFragment extends Fragment {
 
 class DownLineAdapter extends RecyclerView.Adapter<DownLineAdapter.ViewHolder> {
 
-    private ArrayList<SelectedRouteItem> busStops = null;
+    private final ArrayList<SelectedRouteItem> busStops;
 
     @NonNull
     @Override
@@ -258,9 +268,8 @@ class DownLineAdapter extends RecyclerView.Adapter<DownLineAdapter.ViewHolder> {
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
         View view = inflater.inflate(R.layout.item_selected_route, parent, false);
-        DownLineAdapter.ViewHolder viewHolder = new DownLineAdapter.ViewHolder(view);
 
-        return viewHolder;
+        return new DownLineAdapter.ViewHolder(view);
     }
 
     @Override
@@ -268,10 +277,34 @@ class DownLineAdapter extends RecyclerView.Adapter<DownLineAdapter.ViewHolder> {
         String station_name = busStops.get(position).getBusStopName();
         holder.tv_busStop.setText(station_name);
 
-        if(busStops.get(position).isBusIsHere()) {
-            holder.iv_busIcon.setImageResource(R.drawable.bus);
-        } else if (!busStops.get(position).isBusIsHere()) {
-            holder.iv_busIcon.setImageResource(R.color.white);
+        if(SelectedRouteInfo.checked_dest[position]){ //새로고침 할 때 정류장 클릭배경색 유지
+            holder.tv_busStop.setBackgroundColor(Color.rgb(178,204,255));
+        }
+
+        if(busStops.get(position).isBusIsHere()) {  //  버스가 여기에 있다면
+            holder.iv_busIcon.setVisibility(View.VISIBLE);
+            holder.iv_clickedBusIcon.setVisibility(View.GONE);
+            holder.blank.setVisibility(View.GONE);
+
+            //  직전 정류장에 있던 버스가 선택된 버스였던 경우
+            if(SelectedRouteInfo.checked_bus[position-1]) {
+                SelectedRouteInfo.checked_bus[position] = true;
+                holder.iv_clickedBusIcon.setVisibility(View.VISIBLE);
+                holder.iv_busIcon.setVisibility(View.GONE);
+                holder.blank.setVisibility(View.GONE);
+                SelectedRouteInfo.checked_bus[position-1] = false;
+            }
+
+            if(SelectedRouteInfo.checked_bus[position]) { //새로고침할 때 버스 클릭아이콘 유지 (수정필요)
+                holder.iv_busIcon.setVisibility(View.GONE);
+                holder.blank.setVisibility(View.GONE);
+                holder.iv_clickedBusIcon.setVisibility(View.VISIBLE);
+            }
+
+        } else if (!busStops.get(position).isBusIsHere()) { //  버스가 여기에 없다면
+            holder.blank.setVisibility(View.VISIBLE);
+            holder.iv_busIcon.setVisibility(View.GONE);
+            holder.iv_clickedBusIcon.setVisibility(View.GONE);
         }
     }
 
@@ -307,6 +340,8 @@ class DownLineAdapter extends RecyclerView.Adapter<DownLineAdapter.ViewHolder> {
                     iv_clickedBusIcon.setVisibility(View.VISIBLE);
                     SelectedRouteInfo.clickable_bus = false;
                     SelectedRouteInfo.checked_bus[getAdapterPosition()] = true;
+                    SelectedRouteInfo.firstA=true;
+                    SelectedRouteInfo.secondA=true;
                 }
             } else if(view.getId() == R.id.iv_clickedBusIcon) { // 이미 선택된 버스 아이콘 클릭 시
                 if(!SelectedRouteInfo.clickable_bus && SelectedRouteInfo.checked_bus[getAdapterPosition()]) {
@@ -314,6 +349,8 @@ class DownLineAdapter extends RecyclerView.Adapter<DownLineAdapter.ViewHolder> {
                     iv_busIcon.setVisibility(View.VISIBLE);
                     SelectedRouteInfo.clickable_bus = true;
                     SelectedRouteInfo.checked_bus[getAdapterPosition()] = false;
+                    SelectedRouteInfo.firstA=true;
+                    SelectedRouteInfo.secondA=true;
                 }
             }
 
@@ -322,11 +359,15 @@ class DownLineAdapter extends RecyclerView.Adapter<DownLineAdapter.ViewHolder> {
                     tv_busStop.setBackgroundColor(Color.rgb(178,204,255));
                     SelectedRouteInfo.clickable_dest = false;
                     SelectedRouteInfo.checked_dest[getAdapterPosition()] = true;
+                    SelectedRouteInfo.firstA=true;
+                    SelectedRouteInfo.secondA=true;
                 } else if(!SelectedRouteInfo.clickable_dest && SelectedRouteInfo.checked_dest[getAdapterPosition()]) {
                     //  이미 선택된 정류장을 눌렀을 때
                     tv_busStop.setBackgroundColor(Color.WHITE);
                     SelectedRouteInfo.clickable_dest = true;
                     SelectedRouteInfo.checked_dest[getAdapterPosition()] = false;
+                    SelectedRouteInfo.firstA=true;
+                    SelectedRouteInfo.secondA=true;
                 }
             }
 

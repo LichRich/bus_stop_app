@@ -7,12 +7,19 @@ import androidx.viewpager.widget.ViewPager;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 
 import com.google.android.material.tabs.TabLayout;
 import com.thinking.juicer.busstopapplication.Fragment.RouteInfoPagerAdapter;
+import com.thinking.juicer.busstopapplication.Fragment.UpLineFragment;
+
+import java.util.Timer;
+import java.util.TimerTask;
+
 
 import java.util.Timer;
 import java.util.TimerTask;
@@ -42,7 +49,6 @@ public class SelectedRouteInfo extends AppCompatActivity {
 * */
     public static boolean[] checked_bus = new boolean[60], checked_dest = new boolean[60];
     public static boolean clickable_bus = true, clickable_dest = true;
-//    private boolean checked_bus = false, checked_dest = false;
     /*
      *
      * get current position of the tab
@@ -60,45 +66,61 @@ public class SelectedRouteInfo extends AppCompatActivity {
         return intent;
     }
 
-    private Timer timer;
     private TimerTask task;
-    boolean preFlag=false, postFlag=false;
+    private Timer timer;
+    private BusThread bt = new BusThread();
+    private Thread bthread = new Thread(bt);
+    public static boolean firstA , secondA ; //알람 확인용 플래그
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        firstA=true; secondA=true;
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_selected_route_info);
         mContext = getApplicationContext();
+        clickable_bus=true; clickable_dest=true;
 
         mTabLayout = (TabLayout) findViewById(R.id.layout_tab);
         intent = getIntent();
 
-        timer = new Timer();
+//        TimerTask task2 = new TimerTask() {
+//            @Override
+//            public void run() {
+//                Intent mIntest = new Intent(getApplicationContext(), GetOffNotificationActivity.class);
+//
+//                startActivity(mIntest);
+//            }
+//        };
+//
+//        Timer timer2 = new Timer();
+//        timer2.schedule(task2, 1000);
+
+
+        bthread.start();
+
         task = new TimerTask() {
             @Override
             public void run() {
-                int busIndex = getIndex(checked_bus);
-                int destIndex = getIndex(checked_dest);
-
-                if((busIndex>=0) && (destIndex>=0)){
-                    preFlag=true;
-                    postFlag=true;
-                }
-                if((busIndex==destIndex) && preFlag){
-                    Intent mint = new Intent(getApplicationContext(),CheckNotificationActivity.class);
-                    startActivity(mint);
-                    preFlag = false;
-                }
-                else if((busIndex==destIndex-1) && postFlag){
-                    Intent mint = new Intent(getApplicationContext(),GetOffNotificationActivity.class);
-                    startActivity(mint);
-                    postFlag = false;
+                //정류장에 따른 알림
+                if ((!clickable_bus) && (!clickable_dest)) {
+                    if ((indexOfArray(checked_bus) == indexOfArray(checked_dest) - 1)&&firstA) {  //한 정거장 전
+                        Intent intent = new Intent(getApplicationContext(), GetOffNotificationActivity.class);
+                        startActivity(intent);
+                        firstA = false;
+                    } else if ((indexOfArray(checked_bus) == indexOfArray(checked_dest))&&secondA) { //도착
+                        Intent intent = new Intent(getApplicationContext(), CheckNotificationActivity.class);
+                        startActivity(intent);
+                        secondA = false;
+                        finish();
+                    }
                 }
             }
+
         };
 
-        timer.schedule(task,0,500);
 
+        timer = new Timer();
+        timer.schedule(task,0,100);
 /*
 *
 * dir 값을 받아오면서 상행, 하행에 걸맞는 종점을 tab에 출력
@@ -122,6 +144,8 @@ public class SelectedRouteInfo extends AppCompatActivity {
             public void onTabSelected(TabLayout.Tab tab) {
                 mViewPager.setCurrentItem(tab.getPosition());
                 currentPosition = tab.getPosition();
+                firstA=true;
+                secondA=true;
             }
 
             @Override
@@ -136,11 +160,21 @@ public class SelectedRouteInfo extends AppCompatActivity {
         });
     }
 
-    int getIndex(boolean[] arr){
-        for(int i=0; i<arr.length; i++){
-            if(arr[i]==true) return i;
+    public static int indexOfArray(boolean[] checked){   // Searchng index of TRUE
+        for(int i=0; i<checked.length; i++) {
+            if (checked[i] == true) return i;
         }
         return -1;
+    }
+
+    class BusThread extends Thread {
+
+
+        @Override
+        public void run() {
+
+
+        }
     }
 
 }
