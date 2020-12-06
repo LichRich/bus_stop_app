@@ -12,8 +12,10 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.BusStopApplication"
-        android:usesCleartextTraffic="true"><activity android:name=".CheckNotificationActivity" android:screenOrientation="unspecified" android:theme="@style/popupTheme" />
+        android:usesCleartextTraffic="true">
+        <activity android:name=".CheckNotificationActivity" android:screenOrientation="unspecified" android:theme="@style/popupTheme" />
         <activity android:name=".GetOffNotificationActivity" android:screenOrientation="unspecified" android:theme="@style/popupTheme" />
+        <activity android:name=".GetOffVoiceActivity" android:screenOrientation="unspecified" android:theme="@style/popupTheme" />
         <activity android:name=".SelectedRouteInfo" />
         <activity android:name=".MainActivity">
             <intent-filter>
