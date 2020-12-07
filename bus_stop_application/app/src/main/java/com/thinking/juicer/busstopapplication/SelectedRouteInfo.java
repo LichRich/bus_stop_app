@@ -21,6 +21,9 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 
+import java.util.Timer;
+import java.util.TimerTask;
+
 public class SelectedRouteInfo extends AppCompatActivity {
 
 /*
@@ -77,20 +80,15 @@ public class SelectedRouteInfo extends AppCompatActivity {
         mContext = getApplicationContext();
         clickable_bus=true; clickable_dest=true;
 
+        for(int i=0; i<checked_bus.length; i++){
+            checked_bus[i]=false;
+        }
+        for(int i=0; i<checked_dest.length;i++){
+            checked_dest[i]=false;
+        }
+
         mTabLayout = (TabLayout) findViewById(R.id.layout_tab);
         intent = getIntent();
-
-//        TimerTask task2 = new TimerTask() {
-//            @Override
-//            public void run() {
-//                Intent mIntest = new Intent(getApplicationContext(), GetOffNotificationActivity.class);
-//
-//                startActivity(mIntest);
-//            }
-//        };
-//
-//        Timer timer2 = new Timer();
-//        timer2.schedule(task2, 1000);
 
 
         bthread.start();
@@ -173,8 +171,6 @@ public class SelectedRouteInfo extends AppCompatActivity {
 
         }
     }
-
-
 
 }
 
