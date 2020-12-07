@@ -297,15 +297,17 @@ class UpLineAdapter extends RecyclerView.Adapter<UpLineAdapter.ViewHolder> {
             holder.blank.setVisibility(View.GONE);
 
             //  직전 정류장에 있던 버스가 선택된 버스였던 경우
-            if(SelectedRouteInfo.checked_bus[position-1]) {
-                SelectedRouteInfo.checked_bus[position] = true;
-                holder.iv_clickedBusIcon.setVisibility(View.VISIBLE);
-                holder.iv_busIcon.setVisibility(View.GONE);
-                holder.blank.setVisibility(View.GONE);
-                SelectedRouteInfo.checked_bus[position-1] = false;
+            if(position > 0) {  // 첫 정류장에 있는 버스에서 발생하는 오류 방지
+                if(SelectedRouteInfo.checked_bus[position-1]) {
+                    SelectedRouteInfo.checked_bus[position] = true;
+                    holder.iv_clickedBusIcon.setVisibility(View.VISIBLE);
+                    holder.iv_busIcon.setVisibility(View.GONE);
+                    holder.blank.setVisibility(View.GONE);
+                    SelectedRouteInfo.checked_bus[position-1] = false;
+                }
             }
 
-            if(SelectedRouteInfo.checked_bus[position]) { //새로고침할 때 버스 클릭아이콘 유지 (수정필요)
+            if(SelectedRouteInfo.checked_bus[position]) { //새로고침할 때 버스 클릭아이콘 유지
                 holder.iv_busIcon.setVisibility(View.GONE);
                 holder.blank.setVisibility(View.GONE);
                 holder.iv_clickedBusIcon.setVisibility(View.VISIBLE);
@@ -345,42 +347,49 @@ class UpLineAdapter extends RecyclerView.Adapter<UpLineAdapter.ViewHolder> {
         @Override
         public void onClick(View view) {
 
-            if(view.getId() == R.id.iv_busIcon) {   // 버스 아이콘 클릭 시
-                if(SelectedRouteInfo.clickable_bus && !SelectedRouteInfo.checked_bus[getAdapterPosition()]) {
-                    view.setVisibility(View.GONE);
-                    iv_clickedBusIcon.setVisibility(View.VISIBLE);
-                    SelectedRouteInfo.clickable_bus = false;
-                    SelectedRouteInfo.checked_bus[getAdapterPosition()] = true;
-                    SelectedRouteInfo.firstA=true;
-                    SelectedRouteInfo.secondA=true;
+            if(!SelectedRouteInfo.down_touchStart) {
+                if(view.getId() == R.id.iv_busIcon) {   // 버스 아이콘 클릭 시
+                    if(SelectedRouteInfo.clickable_bus && !SelectedRouteInfo.checked_bus[getAdapterPosition()]) {
+                        view.setVisibility(View.GONE);
+                        iv_clickedBusIcon.setVisibility(View.VISIBLE);
+                        SelectedRouteInfo.up_touchStart = !SelectedRouteInfo.up_touchStart;
+                        SelectedRouteInfo.clickable_bus = false;
+                        SelectedRouteInfo.checked_bus[getAdapterPosition()] = true;
+                        SelectedRouteInfo.firstA=true;
+                        SelectedRouteInfo.secondA=true;
+                    }
+                } else if(view.getId() == R.id.iv_clickedBusIcon) { // 이미 선택된 버스 아이콘 클릭 시
+                    if(!SelectedRouteInfo.clickable_bus && SelectedRouteInfo.checked_bus[getAdapterPosition()]) {
+                        view.setVisibility(View.GONE);
+                        iv_busIcon.setVisibility(View.VISIBLE);
+                        SelectedRouteInfo.up_touchStart = !SelectedRouteInfo.up_touchStart;
+                        SelectedRouteInfo.clickable_bus = true;
+                        SelectedRouteInfo.checked_bus[getAdapterPosition()] = false;
+                        SelectedRouteInfo.firstA=true;
+                        SelectedRouteInfo.secondA=true;
+                    }
                 }
-            } else if(view.getId() == R.id.iv_clickedBusIcon) { // 이미 선택된 버스 아이콘 클릭 시
-                if(!SelectedRouteInfo.clickable_bus && SelectedRouteInfo.checked_bus[getAdapterPosition()]) {
-                    view.setVisibility(View.GONE);
-                    iv_busIcon.setVisibility(View.VISIBLE);
-                    SelectedRouteInfo.clickable_bus = true;
-                    SelectedRouteInfo.checked_bus[getAdapterPosition()] = false;
-                    SelectedRouteInfo.firstA=true;
-                    SelectedRouteInfo.secondA=true;
-                }
-            }
 
-            if(view.getId() == R.id.tv_busStop) {  //  버스 정류장 부분 클릭 시
-                if(SelectedRouteInfo.clickable_dest && !SelectedRouteInfo.checked_dest[getAdapterPosition()]) {
-                    tv_busStop.setBackgroundColor(Color.rgb(178,204,255));
-                    SelectedRouteInfo.clickable_dest = false;
-                    SelectedRouteInfo.checked_dest[getAdapterPosition()] = true;
-                    SelectedRouteInfo.firstA=true;
-                    SelectedRouteInfo.secondA=true;
+                if(view.getId() == R.id.tv_busStop) {  //  버스 정류장 부분 클릭 시
+                    if(SelectedRouteInfo.clickable_dest && !SelectedRouteInfo.checked_dest[getAdapterPosition()]) {
+                        tv_busStop.setBackgroundColor(Color.rgb(178,204,255));
+                        SelectedRouteInfo.up_touchStart = !SelectedRouteInfo.up_touchStart;
+                        SelectedRouteInfo.clickable_dest = false;
+                        SelectedRouteInfo.checked_dest[getAdapterPosition()] = true;
+                        SelectedRouteInfo.firstA=true;
+                        SelectedRouteInfo.secondA=true;
 
-                } else if(!SelectedRouteInfo.clickable_dest && SelectedRouteInfo.checked_dest[getAdapterPosition()]) {
-                    //  이미 선택된 정류장을 눌렀을 때
-                    tv_busStop.setBackgroundColor(Color.WHITE);
-                    SelectedRouteInfo.clickable_dest = true;
-                    SelectedRouteInfo.checked_dest[getAdapterPosition()] = false;
-                    SelectedRouteInfo.firstA=true;
-                    SelectedRouteInfo.secondA=true;
+                    } else if(!SelectedRouteInfo.clickable_dest && SelectedRouteInfo.checked_dest[getAdapterPosition()]) {
+                        //  이미 선택된 정류장을 눌렀을 때
+                        tv_busStop.setBackgroundColor(Color.WHITE);
+                        SelectedRouteInfo.up_touchStart = !SelectedRouteInfo.up_touchStart;
+                        SelectedRouteInfo.clickable_dest = true;
+                        SelectedRouteInfo.checked_dest[getAdapterPosition()] = false;
+                        SelectedRouteInfo.firstA=true;
+                        SelectedRouteInfo.secondA=true;
+                    }
                 }
+
             }
 
         }

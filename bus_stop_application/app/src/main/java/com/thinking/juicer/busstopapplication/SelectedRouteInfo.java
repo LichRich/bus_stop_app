@@ -17,6 +17,7 @@ import com.google.android.material.tabs.TabLayout;
 import com.thinking.juicer.busstopapplication.Fragment.RouteInfoPagerAdapter;
 import com.thinking.juicer.busstopapplication.Fragment.UpLineFragment;
 
+import java.util.Arrays;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -47,7 +48,9 @@ public class SelectedRouteInfo extends AppCompatActivity {
 * If both of them are checked, turn on the notification.
 *
 * */
+    public static boolean up_touchStart = false, down_touchStart = false;
     public static boolean[] checked_bus = new boolean[60], checked_dest = new boolean[60];
+    public static boolean[] down_checkedBus = new boolean[60], down_checkedDest = new boolean[60];
     public static boolean clickable_bus = true, clickable_dest = true;
     /*
      *
@@ -80,13 +83,6 @@ public class SelectedRouteInfo extends AppCompatActivity {
         mContext = getApplicationContext();
         clickable_bus=true; clickable_dest=true;
 
-        for(int i=0; i<checked_bus.length; i++){
-            checked_bus[i]=false;
-        }
-        for(int i=0; i<checked_dest.length;i++){
-            checked_dest[i]=false;
-        }
-
         mTabLayout = (TabLayout) findViewById(R.id.layout_tab);
         intent = getIntent();
 
@@ -98,16 +94,34 @@ public class SelectedRouteInfo extends AppCompatActivity {
             public void run() {
                 //정류장에 따른 알림
                 if ((!clickable_bus) && (!clickable_dest)) {
-                    if ((indexOfArray(checked_bus) == indexOfArray(checked_dest) - 1)&&firstA) {  //한 정거장 전
-                        Intent intent = new Intent(getApplicationContext(), GetOffNotificationActivity.class);
-                        startActivity(intent);
-                        firstA = false;
-                    } else if ((indexOfArray(checked_bus) == indexOfArray(checked_dest))&&secondA) { //도착
-                        Intent intent = new Intent(getApplicationContext(), CheckNotificationActivity.class);
-                        startActivity(intent);
-                        secondA = false;
-                        finish();
+                    if(indexOfArray(checked_bus) > -1 && indexOfArray(checked_dest) > -1) { // 상행
+                        if ((indexOfArray(checked_bus) == indexOfArray(checked_dest) - 1)&&firstA) {  // 한 정거장 전
+                            Intent intent = new Intent(getApplicationContext(), GetOffNotificationActivity.class);
+                            startActivity(intent);
+                            firstA = false;
+                        } else if ((indexOfArray(checked_bus) == indexOfArray(checked_dest))&&secondA) { // 도착
+                            Intent intent = new Intent(getApplicationContext(), CheckNotificationActivity.class);
+                            startActivity(intent);
+                            checked_bus[indexOfArray(checked_bus)] = false;
+                            checked_dest[indexOfArray(checked_dest)] = false;
+                            secondA = false;
+                            finish();
+                        }
+                    } else if(indexOfArray(down_checkedBus) > -1 && indexOfArray(down_checkedDest) > -1) { // 하행
+                        if ((indexOfArray(down_checkedBus) == indexOfArray(down_checkedDest) - 1)&&firstA) {  // 한 정거장 전
+                            Intent intent = new Intent(getApplicationContext(), GetOffNotificationActivity.class);
+                            startActivity(intent);
+                            firstA = false;
+                        } else if ((indexOfArray(down_checkedBus) == indexOfArray(down_checkedDest))&&secondA) { // 도착
+                            Intent intent = new Intent(getApplicationContext(), CheckNotificationActivity.class);
+                            startActivity(intent);
+                            down_checkedBus[indexOfArray(down_checkedBus)] = false;
+                            down_checkedDest[indexOfArray(down_checkedDest)] = false;
+                            secondA = false;
+                            finish();
+                        }
                     }
+
                 }
             }
 
@@ -157,7 +171,7 @@ public class SelectedRouteInfo extends AppCompatActivity {
 
     public static int indexOfArray(boolean[] checked){   // Searchng index of TRUE
         for(int i=0; i<checked.length; i++) {
-            if (checked[i] == true) return i;
+            if (checked[i]) return i;
         }
         return -1;
     }
