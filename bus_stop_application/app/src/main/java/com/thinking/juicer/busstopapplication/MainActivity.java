@@ -1,18 +1,16 @@
 package com.thinking.juicer.busstopapplication;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
-import android.view.View;
-import android.widget.AdapterView;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
-import android.widget.Filterable;
 import android.widget.ListView;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.thinking.juicer.busstopapplication.items.BusRouteItem;
 
@@ -141,6 +139,3 @@ public class MainActivity extends AppCompatActivity implements TextWatcher {
 
 
 }
-
-
-
