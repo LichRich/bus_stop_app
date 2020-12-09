@@ -72,7 +72,6 @@ public class GetOffVoiceActivity  extends AppCompatActivity {
         m.release();
 
         finish();
-        super.onBackPressed();
     }
 
 }

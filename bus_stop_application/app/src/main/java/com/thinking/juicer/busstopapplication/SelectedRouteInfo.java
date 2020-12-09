@@ -71,8 +71,6 @@ public class SelectedRouteInfo extends AppCompatActivity {
 
     private TimerTask task;
     private Timer timer;
-    private BusThread bt = new BusThread();
-    private Thread bthread = new Thread(bt);
     public static boolean firstup = true , secondup = true, firstdown = true, seconddown  =true ; //알람 확인용 플래그
 
     @Override
@@ -84,9 +82,6 @@ public class SelectedRouteInfo extends AppCompatActivity {
 
         mTabLayout = (TabLayout) findViewById(R.id.layout_tab);
         intent = getIntent();
-
-
-        bthread.start();
 
         task = new TimerTask() {
             @Override
@@ -173,15 +168,6 @@ public class SelectedRouteInfo extends AppCompatActivity {
         return -1;
     }
 
-    class BusThread extends Thread {
-
-
-        @Override
-        public void run() {
-
-
-        }
-    }
 
 }
 
