@@ -13,7 +13,7 @@ import android.widget.Button;
 public class CheckNotificationActivity extends AppCompatActivity {
 
     private Button yes, no;
-
+    Vibrator vibrator;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -21,7 +21,7 @@ public class CheckNotificationActivity extends AppCompatActivity {
         setContentView(R.layout.activity_check_notification);
 
 
-        final Vibrator vibrator = (Vibrator)getSystemService(Context.VIBRATOR_SERVICE);
+        vibrator = (Vibrator)getSystemService(Context.VIBRATOR_SERVICE);
         yes = findViewById(R.id.btn_yes);
         no = findViewById(R.id.btn_no);
 
@@ -41,6 +41,12 @@ public class CheckNotificationActivity extends AppCompatActivity {
                 finish();
             }
         });
+    }
+
+    @Override
+    public void onBackPressed() {
+        vibrator.cancel();
+        finish();
     }
 
 }
