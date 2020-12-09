@@ -72,7 +72,7 @@ public class UpLineFragment extends Fragment {
 //    url_operations[1] = 노선 정보(정류장 목록 나열)
     private final int num_posInfo = 0;
     private final int num_routeInfo = 1;
-    private final String url_key = "?serviceKey=s740DpEXsLapvBKEYAEowaAXWTo5L93UPd6d7j4dBJx1y%2B7hZOgDTHBOjA5Ae5nUZigLceGKFdrU5WqIi7potw%3D%3D&busRouteId=";
+    private final String url_key = "?serviceKey=N9x0ED%2BuCBJqyok37iImcDr0gUaIdjzZSSReUuciozLoPPfPGRx0pJsAiBmMwst6%2FOxuM3yYLkFAE0Q4Zp8hbQ%3D%3D&busRouteId=";
     /*
      *
      * Get ROUTE_NO from intent.
@@ -355,8 +355,8 @@ class UpLineAdapter extends RecyclerView.Adapter<UpLineAdapter.ViewHolder> {
                         SelectedRouteInfo.up_touchStart = !SelectedRouteInfo.up_touchStart;
                         SelectedRouteInfo.clickable_bus = false;
                         SelectedRouteInfo.checked_bus[getAdapterPosition()] = true;
-                        SelectedRouteInfo.firstA=true;
-                        SelectedRouteInfo.secondA=true;
+                        SelectedRouteInfo.firstup=true;
+                        SelectedRouteInfo.secondup=true;
                     }
                 } else if(view.getId() == R.id.iv_clickedBusIcon) { // 이미 선택된 버스 아이콘 클릭 시
                     if(!SelectedRouteInfo.clickable_bus && SelectedRouteInfo.checked_bus[getAdapterPosition()]) {
@@ -365,8 +365,8 @@ class UpLineAdapter extends RecyclerView.Adapter<UpLineAdapter.ViewHolder> {
                         SelectedRouteInfo.up_touchStart = !SelectedRouteInfo.up_touchStart;
                         SelectedRouteInfo.clickable_bus = true;
                         SelectedRouteInfo.checked_bus[getAdapterPosition()] = false;
-                        SelectedRouteInfo.firstA=true;
-                        SelectedRouteInfo.secondA=true;
+                        SelectedRouteInfo.firstup=true;
+                        SelectedRouteInfo.secondup=true;
                     }
                 }
 
@@ -376,8 +376,8 @@ class UpLineAdapter extends RecyclerView.Adapter<UpLineAdapter.ViewHolder> {
                         SelectedRouteInfo.up_touchStart = !SelectedRouteInfo.up_touchStart;
                         SelectedRouteInfo.clickable_dest = false;
                         SelectedRouteInfo.checked_dest[getAdapterPosition()] = true;
-                        SelectedRouteInfo.firstA=true;
-                        SelectedRouteInfo.secondA=true;
+                        SelectedRouteInfo.firstup=true;
+                        SelectedRouteInfo.secondup=true;
 
                     } else if(!SelectedRouteInfo.clickable_dest && SelectedRouteInfo.checked_dest[getAdapterPosition()]) {
                         //  이미 선택된 정류장을 눌렀을 때
@@ -385,8 +385,8 @@ class UpLineAdapter extends RecyclerView.Adapter<UpLineAdapter.ViewHolder> {
                         SelectedRouteInfo.up_touchStart = !SelectedRouteInfo.up_touchStart;
                         SelectedRouteInfo.clickable_dest = true;
                         SelectedRouteInfo.checked_dest[getAdapterPosition()] = false;
-                        SelectedRouteInfo.firstA=true;
-                        SelectedRouteInfo.secondA=true;
+                        SelectedRouteInfo.firstup=true;
+                        SelectedRouteInfo.secondup=true;
                     }
                 }
 
