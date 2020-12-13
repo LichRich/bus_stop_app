@@ -8,7 +8,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
-import android.os.StrictMode;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,6 +19,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.thinking.juicer.busstopapplication.MainActivity;
 import com.thinking.juicer.busstopapplication.R;
 import com.thinking.juicer.busstopapplication.SelectedRouteInfo;
 import com.thinking.juicer.busstopapplication.items.SelectedRouteItem;
@@ -76,7 +76,8 @@ public class DownLineFragment extends Fragment {
      * Get ROUTE_NO from intent.
      *
      * */
-    private String busRouteId;
+    private static String busRouteId;
+    public static String getBusRouteId() {return busRouteId;}
 
     private DownLineAdapter downLineAdapter;
 
@@ -277,37 +278,52 @@ class DownLineAdapter extends RecyclerView.Adapter<DownLineAdapter.ViewHolder> {
         String station_name = busStops.get(position).getBusStopName();
         holder.tv_busStop.setText(station_name);
 
-        if(SelectedRouteInfo.down_checkedDest[position]){ //새로고침 할 때 정류장 클릭배경색 유지
-            holder.tv_busStop.setBackgroundColor(Color.rgb(178,204,255));
-        }
+        if(MainActivity.selectedID == null || MainActivity.selectedID.equals(UpLineFragment.getBusRouteId())) {
+            if(MainActivity.down_checkedDest[position]){ //새로고침 할 때 정류장 클릭배경색 유지
+                holder.tv_busStop.setBackgroundColor(Color.rgb(178,204,255));
+            }
 
-        if(busStops.get(position).isBusIsHere()) {  //  버스가 여기에 있다면
-            holder.iv_busIcon.setVisibility(View.VISIBLE);
-            holder.iv_clickedBusIcon.setVisibility(View.GONE);
-            holder.blank.setVisibility(View.GONE);
+            if(busStops.get(position).isBusIsHere()) {  //  버스가 여기에 있다면
+                holder.iv_busIcon.setVisibility(View.VISIBLE);
+                holder.iv_clickedBusIcon.setVisibility(View.GONE);
+                holder.blank.setVisibility(View.GONE);
 
-            //  직전 정류장에 있던 버스가 선택된 버스였던 경우
-            if(position > 0) {  // 첫 정류장에 있는 버스에서 발생하는 오류 방지
-                if(SelectedRouteInfo.down_checkedBus[position-1]) {
-                    SelectedRouteInfo.down_checkedBus[position] = true;
-                    holder.iv_clickedBusIcon.setVisibility(View.VISIBLE);
+                //  직전 정류장에 있던 버스가 선택된 버스였던 경우
+                if(position > 0) {  // 첫 정류장에 있는 버스에서 발생하는 오류 방지
+                    if(MainActivity.down_checkedBus[position-1]) {
+                        MainActivity.down_checkedBus[position] = true;
+                        holder.iv_clickedBusIcon.setVisibility(View.VISIBLE);
+                        holder.iv_busIcon.setVisibility(View.GONE);
+                        holder.blank.setVisibility(View.GONE);
+                        MainActivity.down_checkedBus[position-1] = false;
+                    }
+                }
+
+                if(MainActivity.down_checkedBus[position]) { //새로고침할 때 버스 클릭아이콘 유지 (수정필요)
                     holder.iv_busIcon.setVisibility(View.GONE);
                     holder.blank.setVisibility(View.GONE);
-                    SelectedRouteInfo.down_checkedBus[position-1] = false;
+                    holder.iv_clickedBusIcon.setVisibility(View.VISIBLE);
                 }
-            }
 
-            if(SelectedRouteInfo.down_checkedBus[position]) { //새로고침할 때 버스 클릭아이콘 유지 (수정필요)
+            } else if (!busStops.get(position).isBusIsHere()) { //  버스가 여기에 없다면
+                holder.blank.setVisibility(View.VISIBLE);
                 holder.iv_busIcon.setVisibility(View.GONE);
-                holder.blank.setVisibility(View.GONE);
-                holder.iv_clickedBusIcon.setVisibility(View.VISIBLE);
+                holder.iv_clickedBusIcon.setVisibility(View.GONE);
             }
+        } else {
+            if(busStops.get(position).isBusIsHere()) {  //  버스가 여기에 있다면
+                holder.iv_busIcon.setVisibility(View.VISIBLE);
+                holder.iv_clickedBusIcon.setVisibility(View.GONE);
+                holder.blank.setVisibility(View.GONE);
 
-        } else if (!busStops.get(position).isBusIsHere()) { //  버스가 여기에 없다면
-            holder.blank.setVisibility(View.VISIBLE);
-            holder.iv_busIcon.setVisibility(View.GONE);
-            holder.iv_clickedBusIcon.setVisibility(View.GONE);
+            } else if (!busStops.get(position).isBusIsHere()) { //  버스가 여기에 없다면
+                holder.blank.setVisibility(View.VISIBLE);
+                holder.iv_busIcon.setVisibility(View.GONE);
+                holder.iv_clickedBusIcon.setVisibility(View.GONE);
+            }
         }
+
+
     }
 
     @Override
@@ -336,43 +352,46 @@ class DownLineAdapter extends RecyclerView.Adapter<DownLineAdapter.ViewHolder> {
         @Override
         public void onClick(View view) {
 
-            if(!SelectedRouteInfo.up_touchStart) {
+            if(!MainActivity.up_touchStart) {
                 if(view.getId() == R.id.iv_busIcon) {   // 버스 아이콘 클릭 시
-                    if(SelectedRouteInfo.clickable_bus && !SelectedRouteInfo.down_checkedBus[getAdapterPosition()]) {
+                    MainActivity.selectedID = DownLineFragment.getBusRouteId();
+                    if(MainActivity.clickable_bus && !MainActivity.down_checkedBus[getAdapterPosition()]) {
                         view.setVisibility(View.GONE);
                         iv_clickedBusIcon.setVisibility(View.VISIBLE);
-                        SelectedRouteInfo.down_touchStart = !SelectedRouteInfo.down_touchStart;
-                        SelectedRouteInfo.clickable_bus = false;
-                        SelectedRouteInfo.down_checkedBus[getAdapterPosition()] = true;
+                        MainActivity.down_touchStart = !MainActivity.down_touchStart;
+                        MainActivity.clickable_bus = false;
+                        MainActivity.down_checkedBus[getAdapterPosition()] = true;
                         SelectedRouteInfo.firstdown=true;
                         SelectedRouteInfo.seconddown=true;
                     }
                 } else if(view.getId() == R.id.iv_clickedBusIcon) { // 이미 선택된 버스 아이콘 클릭 시
-                    if(!SelectedRouteInfo.clickable_bus && SelectedRouteInfo.down_checkedBus[getAdapterPosition()]) {
+                    if(MainActivity.selectedID != null && MainActivity.clickable_dest) MainActivity.selectedID = null;
+                    if(!MainActivity.clickable_bus && MainActivity.down_checkedBus[getAdapterPosition()]) {
                         view.setVisibility(View.GONE);
                         iv_busIcon.setVisibility(View.VISIBLE);
-                        SelectedRouteInfo.down_touchStart = !SelectedRouteInfo.down_touchStart;
-                        SelectedRouteInfo.clickable_bus = true;
-                        SelectedRouteInfo.down_checkedBus[getAdapterPosition()] = false;
+                        MainActivity.down_touchStart = !MainActivity.down_touchStart;
+                        MainActivity.clickable_bus = true;
+                        MainActivity.down_checkedBus[getAdapterPosition()] = false;
                         SelectedRouteInfo.firstdown=true;
                         SelectedRouteInfo.seconddown=true;
                     }
                 }
 
                 if(view.getId() == R.id.tv_busStop) {  //  버스 정류장 부분 클릭 시
-                    if(SelectedRouteInfo.clickable_dest && !SelectedRouteInfo.down_checkedDest[getAdapterPosition()]) {
+                    MainActivity.selectedID = DownLineFragment.getBusRouteId();
+                    if(MainActivity.clickable_dest && !MainActivity.down_checkedDest[getAdapterPosition()]) {
                         tv_busStop.setBackgroundColor(Color.rgb(178,204,255));
-                        SelectedRouteInfo.down_touchStart = !SelectedRouteInfo.down_touchStart;
-                        SelectedRouteInfo.clickable_dest = false;
-                        SelectedRouteInfo.down_checkedDest[getAdapterPosition()] = true;
+                        MainActivity.down_touchStart = !MainActivity.down_touchStart;
+                        MainActivity.clickable_dest = false;
+                        MainActivity.down_checkedDest[getAdapterPosition()] = true;
                         SelectedRouteInfo.firstdown=true;
                         SelectedRouteInfo.seconddown=true;
-                    } else if(!SelectedRouteInfo.clickable_dest && SelectedRouteInfo.down_checkedDest[getAdapterPosition()]) {
-                        //  이미 선택된 정류장을 눌렀을 때
+                    } else if(!MainActivity.clickable_dest && MainActivity.down_checkedDest[getAdapterPosition()]) { //  이미 선택된 정류장을 눌렀을 때
+                        if(MainActivity.selectedID != null && MainActivity.clickable_dest) MainActivity.selectedID = null;
                         tv_busStop.setBackgroundColor(Color.WHITE);
-                        SelectedRouteInfo.down_touchStart = !SelectedRouteInfo.down_touchStart;
-                        SelectedRouteInfo.clickable_dest = true;
-                        SelectedRouteInfo.down_checkedDest[getAdapterPosition()] = false;
+                        MainActivity.down_touchStart = !MainActivity.down_touchStart;
+                        MainActivity.clickable_dest = true;
+                        MainActivity.down_checkedDest[getAdapterPosition()] = false;
                         SelectedRouteInfo.firstdown=true;
                         SelectedRouteInfo.seconddown=true;
                     }
