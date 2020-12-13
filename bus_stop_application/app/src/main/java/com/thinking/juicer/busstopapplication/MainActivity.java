@@ -125,12 +125,13 @@ public class MainActivity extends AppCompatActivity implements TextWatcher {
 
 
 
-    if(filterText.length()>0){
+    if(filterText.length()>=0){
         //lv.setFilterText(filterText);
         ((ArrayAdapter<String>)lv.getAdapter()).getFilter().filter(filterText);
     }
         else{
         lv.clearTextFilter();
+
         }
 
 
