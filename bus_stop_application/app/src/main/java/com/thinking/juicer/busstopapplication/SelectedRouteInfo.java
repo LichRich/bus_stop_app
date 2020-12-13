@@ -1,26 +1,17 @@
 package com.thinking.juicer.busstopapplication;
 
+import android.content.Context;
+import android.content.Intent;
+import android.os.Bundle;
+import android.util.AttributeSet;
+import android.view.View;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager.widget.ViewPager;
 
-import android.content.Context;
-import android.content.Intent;
-import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
-import android.util.AttributeSet;
-import android.view.LayoutInflater;
-import android.view.View;
-
 import com.google.android.material.tabs.TabLayout;
 import com.thinking.juicer.busstopapplication.Fragment.RouteInfoPagerAdapter;
-import com.thinking.juicer.busstopapplication.Fragment.UpLineFragment;
-
-import java.util.Arrays;
-import java.util.Timer;
-import java.util.TimerTask;
-
 
 import java.util.Timer;
 import java.util.TimerTask;

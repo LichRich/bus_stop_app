@@ -19,8 +19,6 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.thinking.juicer.busstopapplication.CheckNotificationActivity;
-import com.thinking.juicer.busstopapplication.GetOffNotificationActivity;
 import com.thinking.juicer.busstopapplication.MainActivity;
 import com.thinking.juicer.busstopapplication.R;
 import com.thinking.juicer.busstopapplication.SelectedRouteInfo;
@@ -34,7 +32,6 @@ import org.xml.sax.SAXException;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Objects;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -79,7 +76,8 @@ public class UpLineFragment extends Fragment {
      * Get ROUTE_NO from intent.
      *
      * */
-    private String busRouteId;
+    private static String busRouteId;
+    public static String getBusRouteId() {return busRouteId;}
 
     private TimerTask task;
     private Timer timer;
@@ -288,37 +286,54 @@ class UpLineAdapter extends RecyclerView.Adapter<UpLineAdapter.ViewHolder> {
         String station_name = busStops.get(position).getBusStopName();
         holder.tv_busStop.setText(station_name);
 
-        if(MainActivity.checked_dest[position]){ //새로고침 할 때 정류장 클릭배경색 유지
-            holder.tv_busStop.setBackgroundColor(Color.rgb(178,204,255));
-        }
+        if(MainActivity.selectedID == null || MainActivity.selectedID.equals(UpLineFragment.getBusRouteId())) {
 
-        if(busStops.get(position).isBusIsHere()) {  //  버스가 여기에 있다면
-            holder.iv_busIcon.setVisibility(View.VISIBLE);
-            holder.iv_clickedBusIcon.setVisibility(View.GONE);
-            holder.blank.setVisibility(View.GONE);
+            if(MainActivity.checked_dest[position]){ //새로고침 할 때 정류장 클릭배경색 유지
+                holder.tv_busStop.setBackgroundColor(Color.rgb(178,204,255));
+            }
 
-            //  직전 정류장에 있던 버스가 선택된 버스였던 경우
-            if(position > 0) {  // 첫 정류장에 있는 버스에서 발생하는 오류 방지
-                if(MainActivity.checked_bus[position-1]) {
-                    MainActivity.checked_bus[position] = true;
-                    holder.iv_clickedBusIcon.setVisibility(View.VISIBLE);
+            if(busStops.get(position).isBusIsHere()) {  //  버스가 여기에 있다면
+                holder.iv_busIcon.setVisibility(View.VISIBLE);
+                holder.iv_clickedBusIcon.setVisibility(View.GONE);
+                holder.blank.setVisibility(View.GONE);
+
+                //  직전 정류장에 있던 버스가 선택된 버스였던 경우
+                if(position > 0) {  // 첫 정류장에 있는 버스에서 발생하는 오류 방지
+                    if(MainActivity.checked_bus[position-1]) {
+                        MainActivity.checked_bus[position] = true;
+                        holder.iv_clickedBusIcon.setVisibility(View.VISIBLE);
+                        holder.iv_busIcon.setVisibility(View.GONE);
+                        holder.blank.setVisibility(View.GONE);
+                        MainActivity.checked_bus[position-1] = false;
+                    }
+                }
+
+                if(MainActivity.checked_bus[position]) { //새로고침할 때 버스 클릭아이콘 유지
                     holder.iv_busIcon.setVisibility(View.GONE);
                     holder.blank.setVisibility(View.GONE);
-                    MainActivity.checked_bus[position-1] = false;
+                    holder.iv_clickedBusIcon.setVisibility(View.VISIBLE);
                 }
-            }
 
-            if(MainActivity.checked_bus[position]) { //새로고침할 때 버스 클릭아이콘 유지
+            } else if (!busStops.get(position).isBusIsHere()) { //  버스가 여기에 없다면
+                holder.blank.setVisibility(View.VISIBLE);
                 holder.iv_busIcon.setVisibility(View.GONE);
-                holder.blank.setVisibility(View.GONE);
-                holder.iv_clickedBusIcon.setVisibility(View.VISIBLE);
+                holder.iv_clickedBusIcon.setVisibility(View.GONE);
             }
 
-        } else if (!busStops.get(position).isBusIsHere()) { //  버스가 여기에 없다면
-            holder.blank.setVisibility(View.VISIBLE);
-            holder.iv_busIcon.setVisibility(View.GONE);
-            holder.iv_clickedBusIcon.setVisibility(View.GONE);
+        } else {
+            if(busStops.get(position).isBusIsHere()) {  //  버스가 여기에 있다면
+                holder.iv_busIcon.setVisibility(View.VISIBLE);
+                holder.iv_clickedBusIcon.setVisibility(View.GONE);
+                holder.blank.setVisibility(View.GONE);
+
+            } else if (!busStops.get(position).isBusIsHere()) { //  버스가 여기에 없다면
+                holder.blank.setVisibility(View.VISIBLE);
+                holder.iv_busIcon.setVisibility(View.GONE);
+                holder.iv_clickedBusIcon.setVisibility(View.GONE);
+            }
         }
+
+
     }
 
     @Override
@@ -350,6 +365,7 @@ class UpLineAdapter extends RecyclerView.Adapter<UpLineAdapter.ViewHolder> {
 
             if(!MainActivity.down_touchStart) {
                 if(view.getId() == R.id.iv_busIcon) {   // 버스 아이콘 클릭 시
+                    MainActivity.selectedID = UpLineFragment.getBusRouteId();
                     if(MainActivity.clickable_bus && !MainActivity.checked_bus[getAdapterPosition()]) {
                         view.setVisibility(View.GONE);
                         iv_clickedBusIcon.setVisibility(View.VISIBLE);
@@ -360,6 +376,7 @@ class UpLineAdapter extends RecyclerView.Adapter<UpLineAdapter.ViewHolder> {
                         SelectedRouteInfo.secondup=true;
                     }
                 } else if(view.getId() == R.id.iv_clickedBusIcon) { // 이미 선택된 버스 아이콘 클릭 시
+                    if(MainActivity.selectedID != null && MainActivity.clickable_dest) MainActivity.selectedID = null;
                     if(!MainActivity.clickable_bus && MainActivity.checked_bus[getAdapterPosition()]) {
                         view.setVisibility(View.GONE);
                         iv_busIcon.setVisibility(View.VISIBLE);
@@ -372,6 +389,7 @@ class UpLineAdapter extends RecyclerView.Adapter<UpLineAdapter.ViewHolder> {
                 }
 
                 if(view.getId() == R.id.tv_busStop) {  //  버스 정류장 부분 클릭 시
+                    MainActivity.selectedID = UpLineFragment.getBusRouteId();
                     if(MainActivity.clickable_dest && !MainActivity.checked_dest[getAdapterPosition()]) {
                         tv_busStop.setBackgroundColor(Color.rgb(178,204,255));
                         MainActivity.up_touchStart = !MainActivity.up_touchStart;
@@ -380,8 +398,8 @@ class UpLineAdapter extends RecyclerView.Adapter<UpLineAdapter.ViewHolder> {
                         SelectedRouteInfo.firstup=true;
                         SelectedRouteInfo.secondup=true;
 
-                    } else if(!MainActivity.clickable_dest && MainActivity.checked_dest[getAdapterPosition()]) {
-                        //  이미 선택된 정류장을 눌렀을 때
+                    } else if(!MainActivity.clickable_dest && MainActivity.checked_dest[getAdapterPosition()]) { //  이미 선택된 정류장을 눌렀을 때
+                        if(MainActivity.selectedID != null && MainActivity.clickable_bus) MainActivity.selectedID = null;
                         tv_busStop.setBackgroundColor(Color.WHITE);
                         MainActivity.up_touchStart = !MainActivity.up_touchStart;
                         MainActivity.clickable_dest = true;

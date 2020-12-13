@@ -43,6 +43,7 @@ public class MainActivity extends AppCompatActivity implements TextWatcher {
     public static boolean[] checked_bus = new boolean[60], checked_dest = new boolean[60];
     public static boolean[] down_checkedBus = new boolean[60], down_checkedDest = new boolean[60];
     public static boolean clickable_bus = true, clickable_dest = true;
+    public static String selectedID = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
