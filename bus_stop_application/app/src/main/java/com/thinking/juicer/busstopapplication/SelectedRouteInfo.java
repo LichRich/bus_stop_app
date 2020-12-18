@@ -3,12 +3,8 @@ package com.thinking.juicer.busstopapplication;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.AttributeSet;
-import android.view.View;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.viewpager.widget.ViewPager;
 
 import com.google.android.material.tabs.TabLayout;
 import com.thinking.juicer.busstopapplication.Fragment.RouteInfoPagerAdapter;
@@ -59,7 +55,6 @@ public class SelectedRouteInfo extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_selected_route_info);
         mContext = getApplicationContext();
-//        clickable_bus=true; clickable_dest=true;
 
         mTabLayout = (TabLayout) findViewById(R.id.layout_tab);
         intent = getIntent();
@@ -150,29 +145,4 @@ public class SelectedRouteInfo extends AppCompatActivity {
     }
 
 
-}
-
-class RouteInfoViewPager extends ViewPager {
-
-    public RouteInfoViewPager(@NonNull Context context) {
-        super(context);
-    }
-    public RouteInfoViewPager(@NonNull Context context, AttributeSet attrs) {
-        super(context, attrs);
-    }
-
-    @Override
-    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        int height = 0;
-        for(int i = 0; i < getChildCount(); i++) {
-            View child = getChildAt(i);
-            child.measure(widthMeasureSpec, MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED));
-            int h = child.getMeasuredHeight();
-            if(h > height) {
-                height = h;
-            }
-        }
-        heightMeasureSpec = MeasureSpec.makeMeasureSpec(height, MeasureSpec.EXACTLY);
-        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
-    }
 }
