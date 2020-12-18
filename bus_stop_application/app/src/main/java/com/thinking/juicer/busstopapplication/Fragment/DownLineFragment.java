@@ -70,7 +70,7 @@ public class DownLineFragment extends Fragment {
     //    url_operations[1] = 노선 정보(정류장 목록 나열)
     private final int num_posInfo = 0;
     private final int num_routeInfo = 1;
-    private final String url_key = "?serviceKey=N9x0ED%2BuCBJqyok37iImcDr0gUaIdjzZSSReUuciozLoPPfPGRx0pJsAiBmMwst6%2FOxuM3yYLkFAE0Q4Zp8hbQ%3D%3D&busRouteId=";
+    private final String url_key = "?serviceKey=s740DpEXsLapvBKEYAEowaAXWTo5L93UPd6d7j4dBJx1y%2B7hZOgDTHBOjA5Ae5nUZigLceGKFdrU5WqIi7potw%3D%3D&busRouteId=";
     /*
      *
      * Get ROUTE_NO from intent.
@@ -222,10 +222,9 @@ public class DownLineFragment extends Fragment {
         NodeList itemList2 = rt_doc.getElementsByTagName("itemList");
 
 //        get station name from XML to station_name and check bus_isHere
-        int j = 0;
         Element element = null;
         boolean downLine = false;
-        do {
+        for(int j = 0 ; j < itemList2.getLength() ; j++) {
             Node item = itemList2.item(j);
             if(item.getNodeType() == Node.ELEMENT_NODE) {
                 element = (Element) item;
@@ -236,8 +235,7 @@ public class DownLineFragment extends Fragment {
                     bus_isHere.add(station_id.contains(getTagValue("BUS_STOP_ID", element)));
                 }
             }
-            j++;
-        } while(!getTagValue("BUSSTOP_TP", element).equals("3"));
+        }
 
         ArrayList<SelectedRouteItem> res = new ArrayList<>();
 
