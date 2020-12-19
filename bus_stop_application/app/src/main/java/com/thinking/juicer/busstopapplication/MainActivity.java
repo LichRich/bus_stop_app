@@ -88,6 +88,7 @@ public class MainActivity extends AppCompatActivity implements TextWatcher {
                     if(startTag.equals("ROUTE_NO")){
                         busRouteItem.setBusNum(parser.nextText());
                     }
+
                     break;
                     case XmlPullParser.END_TAG:
                         String endTag = parser.getName();
