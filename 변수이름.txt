@@ -16,11 +16,23 @@
 ------------------------------------------------------------------
 3. BusRouteItem.java
  -> 노선번호 목록에 나열 될 아이템 객체 java class
-버스 노선번호: int num;
+버스 노선번호: String busNum;
+버스 노선id: String busIdl
 getter/setter 있음. 생성자 있음.
 ------------------------------------------------------------------
 4. MainActivity.java
  -> 노선번호 목록이 나열 될 메인 activity java class
+리스트뷰: lv;
+검색창: et_sch;
+어댑터: adapter;
+아이템리스트: list;
+
+--<수빈, 찬호 사용>--
+list정의를 위한 아이템리스트: arrayList;
+상, 하행선 선택 시작여부 확인: up_touchStart, down_touchStart;
+선택된 버스 및 목적지 배열: checked_bus[], checked_dest[], down_checkedBus[], down_checkedDest[];
+버스 및 목적지 선택여부 확인: clickable_bus, clickable_dest;
+선택된 버스노선 id: selectedID;
 
 ------------------------------------------------------------------
 (찬호) <<선택된 버스 노선 관련>>
@@ -87,6 +99,16 @@ Layout Components:
  private RecyclerView rv_down;
 RecyclerView에 목록을 출력하기 위한 Adapter: downLineAdapter
 ------------------------------------------------------------------
+8. RouteInfoViewPager.java
+-> SelectedRouteInfo에 리스트를 뷰페이저로 출력하기 위한 객체
+현재 보이는 fragment: mCurrentView;
+------------------------------------------------------------------
+8-1. RouteInfoPagerAdapter.java
+-> ViewPager를 SelectedRouteInfo에 연결하는 adapter.
+전체 페이지 수: pageCount;
+현재 페이지: mCurrentPosition;
+
+------------------------------------------------------------------
 (수빈) <<알림 관련>>
 ------------------------------------------------------------------
 
@@ -107,3 +129,9 @@ check: 확인버튼
  -> 하차 여부를 묻는 activity java class
 yes : yes버튼
 no: no버튼
+------------------------------------------------------------------
+5. GetOffVoiceActivity.java
+-> 하차 요청 보이스 activity java class
+예, 아니오 버튼: yes, no;
+하차 요청 여부 확인 메시지: text;
+미디어 플레이어: m;

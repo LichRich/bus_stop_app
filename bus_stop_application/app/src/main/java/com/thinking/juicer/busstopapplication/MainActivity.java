@@ -23,11 +23,12 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 
 public class MainActivity extends AppCompatActivity implements TextWatcher {
 
     ListView lv;
-    ArrayList<String> routeIdList;
     EditText et_sch;
     ArrayAdapter<String> adapter;
     ArrayList<BusRouteItem> list;
@@ -51,7 +52,6 @@ public class MainActivity extends AppCompatActivity implements TextWatcher {
         setContentView(R.layout.activity_main);
 
         lv = (ListView)findViewById(R.id.lv);
-        routeIdList = new ArrayList<>();
         et_sch = (EditText) findViewById(R.id.et_search);
 
         list = xmlParser();
@@ -68,7 +68,7 @@ public class MainActivity extends AppCompatActivity implements TextWatcher {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 Intent intent = new Intent(getApplicationContext(), SelectedRouteInfo.class);
-                intent.putExtra("busRouteId", routeIdList.get(i));
+                intent.putExtra("busRouteId", arrayList.get(i).getBusId());
                 startActivity(intent);
             }
         });
@@ -95,11 +95,12 @@ public class MainActivity extends AppCompatActivity implements TextWatcher {
                         busRouteItem = new BusRouteItem();
                     }
                     if(startTag.equals("ROUTE_CD")){
-                        routeIdList.add(parser.nextText());
+                        busRouteItem.setBusId(parser.nextText());
                     }
                     if(startTag.equals("ROUTE_NO")){
                         busRouteItem.setBusNum(parser.nextText());
                     }
+
                     break;
                     case XmlPullParser.END_TAG:
                         String endTag = parser.getName();
@@ -118,6 +119,9 @@ public class MainActivity extends AppCompatActivity implements TextWatcher {
         } catch (IOException e) {
             e.printStackTrace();
         }
+
+        Collections.sort(arrayList, (item1, item2) -> item1.getBusNum().compareTo((item2.getBusNum())));
+
         return arrayList;
     }
 

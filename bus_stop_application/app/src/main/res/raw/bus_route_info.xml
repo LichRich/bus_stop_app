@@ -24,7 +24,7 @@
             <ORIGIN_START_SAT>0600</ORIGIN_START_SAT>
             <ORIGIN_START_SUN>0630</ORIGIN_START_SUN>
             <ROUTE_CD>30300001</ROUTE_CD>
-            <ROUTE_NO>1</ROUTE_NO>
+            <ROUTE_NO>마을 1</ROUTE_NO>
             <ROUTE_TP>5 </ROUTE_TP>
             <RUN_DIST_HALF>23.907</RUN_DIST_HALF>
             <RUN_TM>70 </RUN_TM>
@@ -53,7 +53,7 @@
             <ORIGIN_START_SAT>0545</ORIGIN_START_SAT>
             <ORIGIN_START_SUN>0545</ORIGIN_START_SUN>
             <ROUTE_CD>30300002</ROUTE_CD>
-            <ROUTE_NO>2</ROUTE_NO>
+            <ROUTE_NO>급행 2</ROUTE_NO>
             <ROUTE_TP>1 </ROUTE_TP>
             <RUN_DIST_HALF>29.3505</RUN_DIST_HALF>
             <RUN_TM>88 </RUN_TM>
@@ -82,7 +82,7 @@
             <ORIGIN_START_SAT>0555</ORIGIN_START_SAT>
             <ORIGIN_START_SUN>0600</ORIGIN_START_SUN>
             <ROUTE_CD>30300003</ROUTE_CD>
-            <ROUTE_NO>3</ROUTE_NO>
+            <ROUTE_NO>마을 3</ROUTE_NO>
             <ROUTE_TP>5 </ROUTE_TP>
             <RUN_DIST_HALF>22.603</RUN_DIST_HALF>
             <RUN_TM>70 </RUN_TM>
@@ -111,7 +111,7 @@
             <ORIGIN_START_SAT>0600</ORIGIN_START_SAT>
             <ORIGIN_START_SUN>0600</ORIGIN_START_SUN>
             <ROUTE_CD>30300004</ROUTE_CD>
-            <ROUTE_NO>5</ROUTE_NO>
+            <ROUTE_NO>마을 5</ROUTE_NO>
             <ROUTE_TP>5 </ROUTE_TP>
             <RUN_DIST_HALF>18.056</RUN_DIST_HALF>
             <RUN_TM>90 </RUN_TM>
@@ -1950,7 +1950,7 @@
             <ORIGIN_START_SAT>0525</ORIGIN_START_SAT>
             <ORIGIN_START_SUN>0525</ORIGIN_START_SUN>
             <ROUTE_CD>30300100</ROUTE_CD>
-            <ROUTE_NO>1</ROUTE_NO>
+            <ROUTE_NO>급행 1</ROUTE_NO>
             <ROUTE_TP>1 </ROUTE_TP>
             <RUN_DIST_HALF>14.1865</RUN_DIST_HALF>
             <RUN_TM>49 </RUN_TM>
@@ -2008,7 +2008,7 @@
             <ORIGIN_START_SAT>0540</ORIGIN_START_SAT>
             <ORIGIN_START_SUN>0540</ORIGIN_START_SUN>
             <ROUTE_CD>30300103</ROUTE_CD>
-            <ROUTE_NO>1</ROUTE_NO>
+            <ROUTE_NO>첨단 1</ROUTE_NO>
             <ROUTE_TP>6 </ROUTE_TP>
             <RUN_DIST_HALF>4.39</RUN_DIST_HALF>
             <RUN_TM>30 </RUN_TM>
@@ -2037,7 +2037,7 @@
             <ORIGIN_START_SAT>0530</ORIGIN_START_SAT>
             <ORIGIN_START_SUN>0530</ORIGIN_START_SUN>
             <ROUTE_CD>30300104</ROUTE_CD>
-            <ROUTE_NO>3</ROUTE_NO>
+            <ROUTE_NO>급행 3</ROUTE_NO>
             <ROUTE_TP>1 </ROUTE_TP>
             <RUN_DIST_HALF>13.6175</RUN_DIST_HALF>
             <RUN_TM>44 </RUN_TM>
