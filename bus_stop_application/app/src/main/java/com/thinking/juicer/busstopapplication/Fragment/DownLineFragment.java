@@ -158,8 +158,8 @@ public class DownLineFragment extends Fragment {
         ArrayList<String> station_name = new ArrayList<>();
 
         String[] url_operations = {"/busposinfo/getBusPosByRtid", "/busRouteInfo/getStaionByRoute"};
-        String url_busPos = mUrl + url_operations[op1] + "?serviceKey=N9x0ED%2BuCBJqyok37iImcDr0gUaIdjzZSSReUuciozLoPPfPGRx0pJsAiBmMwst6%2FOxuM3yYLkFAE0Q4Zp8hbQ%3D%3D&busRouteId=" + id;
-        String url_busRoute = mUrl + url_operations[op2] + k + id;
+        String url_busPos = mUrl + url_operations[op1] + k + id;
+        String url_busRoute = mUrl + url_operations[op2] + "?serviceKey=N9x0ED%2BuCBJqyok37iImcDr0gUaIdjzZSSReUuciozLoPPfPGRx0pJsAiBmMwst6%2FOxuM3yYLkFAE0Q4Zp8hbQ%3D%3D&busRouteId=" + id;
 
         /*
          * builders to get information from API
