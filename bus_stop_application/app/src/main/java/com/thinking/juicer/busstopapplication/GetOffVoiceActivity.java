@@ -24,6 +24,7 @@ public class GetOffVoiceActivity  extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_getoff_voice);
+        this.setFinishOnTouchOutside(false);
 
         yes = findViewById(R.id.btn_please);
         no = findViewById(R.id.btn_nothanks);

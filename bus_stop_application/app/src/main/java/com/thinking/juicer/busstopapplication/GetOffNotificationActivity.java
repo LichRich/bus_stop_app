@@ -14,12 +14,13 @@ public class GetOffNotificationActivity  extends AppCompatActivity {
     private Button getOff;
     long[] pattern = {100,300,100,500,700};
     Vibrator vibrator;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_getoff_notification);
-
+        this.setFinishOnTouchOutside(false);
 
         vibrator = (Vibrator)getSystemService(Context.VIBRATOR_SERVICE);
         getOff = findViewById(R.id.btn_notificationOk);
@@ -35,6 +36,11 @@ public class GetOffNotificationActivity  extends AppCompatActivity {
             }
         });
 
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
     }
 
     @Override

@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">BusStopApplication</string>
+    <string name="app_name">내려요, 우리</string>
     <string name="hint_search">노선 번호를 입력하세요.</string>
     <string name="btn_search">검색</string>
     <string name="notification_get_off_1">한 정거장 전이에요!</string>

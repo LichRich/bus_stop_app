@@ -19,7 +19,7 @@ public class CheckNotificationActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_check_notification);
-
+        this.setFinishOnTouchOutside(false);
 
         vibrator = (Vibrator)getSystemService(Context.VIBRATOR_SERVICE);
         yes = findViewById(R.id.btn_yes);
@@ -38,9 +38,26 @@ public class CheckNotificationActivity extends AppCompatActivity {
             public void onClick(View view) {
                 Intent myintent = new Intent(getApplicationContext(), GetOffVoiceActivity.class);
                 startActivity(myintent);
-                finish();
             }
         });
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        SelectedRouteInfo.routeInfoFinish();
+        finish();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+
     }
 
     @Override

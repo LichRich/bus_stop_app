@@ -50,6 +50,8 @@ public class SelectedRouteInfo extends AppCompatActivity {
     private Timer timer;
     public static boolean firstup = true , secondup = true, firstdown = true, seconddown  =true ; //알람 확인용 플래그
 
+    private static SelectedRouteInfo routeInfo;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -67,28 +69,36 @@ public class SelectedRouteInfo extends AppCompatActivity {
                     if(indexOfArray(MainActivity.checked_bus) > -1 && indexOfArray(MainActivity.checked_dest) > -1) { // 상행
                         if ((indexOfArray(MainActivity.checked_bus) == indexOfArray(MainActivity.checked_dest) - 1)&&firstup) {  // 한 정거장 전
                             Intent intent = new Intent(getApplicationContext(), GetOffNotificationActivity.class);
-                            startActivity(intent);
                             firstup = false;
-                        } else if ((indexOfArray(MainActivity.checked_bus) == indexOfArray(MainActivity.checked_dest))&&secondup) { // 도착
-                            Intent intent = new Intent(getApplicationContext(), CheckNotificationActivity.class);
                             startActivity(intent);
+                        } else if (indexOfArray(MainActivity.checked_bus) > -1 &&
+                                (indexOfArray(MainActivity.checked_bus) == indexOfArray(MainActivity.checked_dest))&&secondup) { // 도착
+                            Intent intent = new Intent(getApplicationContext(), CheckNotificationActivity.class);
+                            MainActivity.up_touchStart = false;
                             MainActivity.checked_bus[indexOfArray(MainActivity.checked_bus)] = false;
                             MainActivity.checked_dest[indexOfArray(MainActivity.checked_dest)] = false;
+                            MainActivity.clickable_bus = true;
+                            MainActivity.clickable_dest = true;
+                            MainActivity.selectedID = null;
                             secondup = false;
-                            finish();
+                            startActivity(intent);
                         }
                     } else if(indexOfArray(MainActivity.down_checkedBus) > -1 && indexOfArray(MainActivity.down_checkedDest) > -1) { // 하행
                         if ((indexOfArray(MainActivity.down_checkedBus) == indexOfArray(MainActivity.down_checkedDest) - 1)&&firstdown) {  // 한 정거장 전
                             Intent intent = new Intent(getApplicationContext(), GetOffNotificationActivity.class);
-                            startActivity(intent);
                             firstdown = false;
-                        } else if ((indexOfArray(MainActivity.down_checkedBus) == indexOfArray(MainActivity.down_checkedDest))&&seconddown) { // 도착
-                            Intent intent = new Intent(getApplicationContext(), CheckNotificationActivity.class);
                             startActivity(intent);
+                        } else if (indexOfArray(MainActivity.down_checkedBus) > -1 &&
+                                (indexOfArray(MainActivity.down_checkedBus) == indexOfArray(MainActivity.down_checkedDest))&&seconddown) { // 도착
+                            Intent intent = new Intent(getApplicationContext(), CheckNotificationActivity.class);
+                            MainActivity.down_touchStart = false;
                             MainActivity.down_checkedBus[indexOfArray(MainActivity.down_checkedBus)] = false;
                             MainActivity.down_checkedDest[indexOfArray(MainActivity.down_checkedDest)] = false;
+                            MainActivity.clickable_bus = true;
+                            MainActivity.clickable_dest = true;
+                            MainActivity.selectedID = null;
                             seconddown = false;
-                            finish();
+                            startActivity(intent);
                         }
                     }
 
@@ -97,14 +107,9 @@ public class SelectedRouteInfo extends AppCompatActivity {
 
         };
 
-
         timer = new Timer();
         timer.schedule(task,0,100);
-/*
-*
-* dir 값을 받아오면서 상행, 하행에 걸맞는 종점을 tab에 출력
-*
-* */
+
         mTabLayout.addTab(mTabLayout.newTab().setText("상행"));
         mTabLayout.addTab(mTabLayout.newTab().setText("하행"));
 
@@ -135,6 +140,13 @@ public class SelectedRouteInfo extends AppCompatActivity {
 
             }
         });
+
+        routeInfo = SelectedRouteInfo.this;
+
+    }
+
+    public static void routeInfoFinish() {
+        routeInfo.finish();
     }
 
     public static int indexOfArray(boolean[] checked){   // Searching index of TRUE

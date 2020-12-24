@@ -6,7 +6,7 @@
     android:layout_height="120dp"
     android:orientation="vertical"
     android:background="#FFFFFF"
-    tools:context=".GetOffNotificationActivity">>
+    tools:context=".GetOffNotificationActivity">
 
     <TextView
         android:id="@+id/tv_getOff_1"
